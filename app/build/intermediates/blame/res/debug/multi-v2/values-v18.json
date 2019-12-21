@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "S:\\SmartGuitarApp\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v18\\values-v18.xml",
+            "outputFile": "C:\\GuitarProject\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v18\\values-v18.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\dannyboy\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-26.1.0.aar\\f87433f00d06ca4fa65ca9856c36bac9\\res\\values-v18\\values-v18.xml",
+                    "source": "C:\\Users\\ofiri\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-26.1.0.aar\\457c88fd1e630f33de1a2ca4f21ed3ec\\res\\values-v18\\values-v18.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
