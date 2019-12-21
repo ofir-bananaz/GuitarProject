@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Smart Guitar</string>
+    <string name="hello_world">Hello World!</string>
+    <string name="goodbye">goodbye!</string>
+    <string name="change_string">Change string</string>
+    <string name="title_activity_main">Main Activity</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="button_send">Send!</string>
+    <string name="debug_options">Debug Options</string>
+    <string name="server_ip">Server IP:</string>
+    <string-array name="tab_files">
+        <item>simple_ours.txt</item>
+        <item>another_file.txt</item>
+        <item>Enter tabs file URL&#8230;</item>
+    </string-array>
+
+</resources>
