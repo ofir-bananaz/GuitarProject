@@ -1,4 +1,0 @@
-#Tue Sep 04 18:06:29 IDT 2018
-base.0=S\:\\SmartGuitarApp\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\9
-path.0=classes.dex
-renamed.0=classes.dex

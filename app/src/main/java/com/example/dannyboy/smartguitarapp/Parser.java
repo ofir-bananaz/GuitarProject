@@ -1,7 +1,6 @@
 package com.example.dannyboy.smartguitarapp;
 
 import android.app.Activity;
-import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -16,11 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * Created by SlimPC on 21-Dec-17. Test
  */
 
 public class Parser{
+
 	private static final int LAST_FRET = 8;//last_fret in their code
 	private static  int TEMPO_DEFAULT = 127;//last_fret in their code
 	private static final int _PRP = 86;
@@ -514,11 +515,7 @@ public class Parser{
 					sent_stringDannyBuilder.append(curDot.get_color().substring(0,1).toUpperCase());
 					sent_stringDannyBuilder.append(String.valueOf(curDot.get_fret()));
 					sent_stringDannyBuilder.append(String.valueOf(curDot.get_string()));
-
-
 				}
-
-
 
 				sent_stringBuilder.append(Character.toString((char) _HLD));
 				sent_stringBuilder.append(Character.toString((char) TEMPO_DEFAULT));
@@ -568,6 +565,7 @@ public class Parser{
 		}
 		return serverAnswer;
 	}
+
 	public String sendToGuitar(Activity mainActivity, String controllerIP, String controllerPort,  Boolean interactive_mode){
 
 		DebugLog.d("myFilter", "Generating data...");
@@ -580,7 +578,7 @@ public class Parser{
 		this.reverse_all_strings();
 		this.shift_left_all();
 		DebugLog.d("myFilter", "Sending data to controller...");
-		return   this.sendDataToController(mainActivity,"UDP", controllerIP, controllerPort,interactive_mode);
+		return   this.sendDataToController(mainActivity,"UDP", controllerIP, controllerPort, interactive_mode);
 
 
 	}

@@ -77,11 +77,11 @@
                             android:hint="192.168.137.204"
                             android:inputType="textCapWords|textPersonName"
                             android:singleLine="false"
-                            android:textAppearance="@style/TextAppearance.AppCompat"
                             android:textSize="12sp"
                             android:typeface="monospace"
                             tools:layout_editor_absoluteX="84dp"
-                            tools:layout_editor_absoluteY="31dp" />
+                            tools:layout_editor_absoluteY="31dp"
+                            android:autofillHints="" />
                     </TableRow>
 
                     <TableRow
@@ -107,7 +107,6 @@
                             android:fontFamily="monospace"
                             android:hint="10080"
                             android:inputType="textPersonName"
-                            android:textAppearance="@style/TextAppearance.AppCompat"
                             android:textSize="12sp"
                             android:typeface="monospace"
                             tools:layout_editor_absoluteX="90dp"
@@ -141,7 +140,7 @@
                     android:fontFamily="monospace"
                     android:gravity="center"
                     android:text="DebugLog™ output:"
-                    android:textAlignment="textStart"
+                    android:textAlignment="center"
                     android:textColor="@android:color/holo_green_light"
                     android:textSize="12sp"
                     tools:text="DebugLog™ output:" />
@@ -234,7 +233,7 @@
                         android:checked="false"
                         android:gravity="center"
                         android:text="Interactive"
-                        android:textAlignment="textStart"
+                        android:textAlignment="center"
                         android:textSize="10sp" />
 
                 </LinearLayout>
