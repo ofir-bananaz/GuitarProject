@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\GuitarProject\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v17\\values-v17.xml",
+            "outputFile": "C:\\Users\\sanoh\\StudioProjects\\GuitarProjectNew\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v17\\values-v17.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\ofiri\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-26.1.0.aar\\457c88fd1e630f33de1a2ca4f21ed3ec\\res\\values-v17\\values-v17.xml",
+                    "source": "C:\\Users\\sanoh\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-26.1.0.aar\\c75c6504a887ed11c4067c43bb7af9af\\res\\values-v17\\values-v17.xml",
                     "from": {
                         "startLines": "2,5,9,12,15,18,22,26,29,32,35,39,42,46",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4",
