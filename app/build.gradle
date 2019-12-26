@@ -1,4 +1,10 @@
 apply plugin: 'com.android.application'
+//For Chaquopy python integration
+apply plugin: 'com.android.application'
+apply plugin: 'com.chaquo.python'
+//End
+
+
 
 android {
     compileSdkVersion 26
@@ -9,6 +15,15 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        //For Chaquopy python integration
+        ndk {
+            abiFilters "armeabi-v7a", "x86"     //armeabi is for supported by most android cpu's. x86 is for studio emulation. (abi ~= cput interface)
+        }
+        python {
+            buildPython "C:/Program Files/WindowsApps/PythonSoftwareFoundation.Python.3.7_3.7.1776.0_x64__qbz5n2kfra8p0/python.exe"
+            buildPython "py -3.7"
+        }
+        //End
     }
     buildTypes {
         release {
@@ -17,7 +32,19 @@ android {
         }
     }
     productFlavors {
+        //TODO : It's possible to add "flavoirDimensions to reduce application's size. (for abi)
     }
+    //TODO : add python source sets for portability
+    /*
+    sourceSets {
+        main {
+            python {
+                srcDirs = ["replacement/dir"]
+                srcDir "additional/dir"
+            }
+        }
+    }
+     */
 }
 
 dependencies {
