@@ -8,6 +8,19 @@
     <string name="button_send">Send!</string>
     <string name="debug_options">Debug Options</string>
     <string name="server_ip">Server IP:</string>
+    <string name="default_server_ip">192.168.137.204</string>
+    <string name="server_port">Server Port:</string>
+    <string name="_10080">10080</string>
+    <string name="verify">Verify</string>
+    <string name="debuglog_output">DebugLog output:</string>
+    <string name="song">Song:</string>
+    <string name="togglebutton">ToggleButton</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="interactive">Interactive</string>
+    <string name="stop">Stop</string>
+    <string name="tempo">Tempo:</string>
+    <string name="default_tempo">127</string>
     <string-array name="tab_files">
         <item>simple_ours.txt</item>
         <item>another_file.txt</item>

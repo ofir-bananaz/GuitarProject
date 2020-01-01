@@ -26,7 +26,7 @@
         <LinearLayout
             android:id="@+id/debugSettingsLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="2"
             android:background="@drawable/border"
             android:orientation="vertical"
@@ -39,7 +39,8 @@
                 android:text="@string/debug_options"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textSize="8sp" />
+                android:textSize="8sp"
+                tools:ignore="SmallSp" />
 
             <LinearLayout
                 android:id="@+id/serverConfLayout"
@@ -74,7 +75,7 @@
                             android:background="@null"
                             android:ems="10"
                             android:fontFamily="monospace"
-                            android:hint="192.168.137.204"
+                            android:hint="@string/default_server_ip"
                             android:inputType="textCapWords|textPersonName"
                             android:singleLine="false"
                             android:textSize="12sp"
@@ -93,7 +94,7 @@
                             android:id="@+id/txtPort"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Server Port:"
+                            android:text="@string/server_port"
                             android:textColor="@android:color/black"
                             tools:layout_editor_absoluteX="8dp"
                             tools:layout_editor_absoluteY="87dp" />
@@ -105,12 +106,13 @@
                             android:background="@null"
                             android:ems="10"
                             android:fontFamily="monospace"
-                            android:hint="10080"
+                            android:hint="@string/_10080"
                             android:inputType="textPersonName"
                             android:textSize="12sp"
                             android:typeface="monospace"
                             tools:layout_editor_absoluteX="90dp"
-                            tools:layout_editor_absoluteY="72dp" />
+                            tools:layout_editor_absoluteY="72dp"
+                            tools:ignore="Autofill" />
                     </TableRow>
 
                 </TableLayout>
@@ -121,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:elevation="0dp"
-                    android:text="Verify"
+                    android:text="@string/verify"
                     tools:text="Verify" />
 
             </LinearLayout>
@@ -139,7 +141,7 @@
                     android:layout_weight="0"
                     android:fontFamily="monospace"
                     android:gravity="center"
-                    android:text="DebugLog™ output:"
+                    android:text="@string/debuglog_output"
                     android:textAlignment="center"
                     android:textColor="@android:color/holo_green_light"
                     android:textSize="12sp"
@@ -159,7 +161,8 @@
                     android:textSize="11sp"
                     android:typeface="monospace"
                     tools:layout_editor_absoluteX="187dp"
-                    tools:layout_editor_absoluteY="336dp" />
+                    tools:layout_editor_absoluteY="336dp"
+                    tools:ignore="SmallSp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -185,7 +188,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="0"
-                    android:text="Song:"
+                    android:text="@string/song"
                     android:textAlignment="viewStart"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/spinner"
@@ -207,7 +210,8 @@
                 android:id="@+id/playControlLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -221,9 +225,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@android:color/holo_green_light"
-                        android:text="ToggleButton"
-                        android:textOff="Play"
-                        android:textOn="Pause" />
+                        android:text="@string/togglebutton"
+                        android:textOff="@string/play"
+                        android:textOn="@string/pause"
+                        tools:ignore="NestedWeights" />
 
                     <CheckBox
                         android:id="@+id/checkBox"
@@ -232,9 +237,10 @@
                         android:layout_weight="1"
                         android:checked="false"
                         android:gravity="center"
-                        android:text="Interactive"
+                        android:text="@string/interactive"
                         android:textAlignment="center"
-                        android:textSize="10sp" />
+                        android:textSize="10sp"
+                        tools:ignore="SmallSp" />
 
                 </LinearLayout>
 
@@ -250,7 +256,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@android:color/holo_red_light"
-                        android:text="Stop" />
+                        android:text="@string/stop"
+                        tools:ignore="NestedWeights" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -263,7 +270,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Tempo:"
+                            android:text="@string/tempo"
                             android:textAlignment="textEnd" />
 
                         <EditText
@@ -272,9 +279,10 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ems="10"
-                            android:hint="127"
+                            android:hint="@string/default_tempo"
                             android:inputType="number"
-                            android:textAlignment="center" />
+                            android:textAlignment="center"
+                            android:importantForAutofill="no" />
                     </LinearLayout>
                 </LinearLayout>
 
