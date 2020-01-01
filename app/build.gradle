@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 //For Chaquopy python integration
-apply plugin: 'com.android.application'
 apply plugin: 'com.chaquo.python'
 //End
 
@@ -17,7 +16,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         //For Chaquopy python integration
         ndk {
-            abiFilters "armeabi-v7a", "x86"     //armeabi is for supported by most android cpu's. x86 is for studio emulation. (abi ~= cput interface)
+            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"     //armeabi is for supported by most android cpu's. x86 is for studio emulation. (abi ~= cput interface)
         }
         python {
             buildPython "C:/Program Files/WindowsApps/PythonSoftwareFoundation.Python.3.7_3.7.1776.0_x64__qbz5n2kfra8p0/python.exe"
