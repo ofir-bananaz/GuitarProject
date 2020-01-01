@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 		debugView.setMovementMethod(new ScrollingMovementMethod());
 		debugLog = new DebugLog(true, debugView);
 		promptDialog = new PromptDialog(MainActivity.this);
-		initiateSongsList();
+		//initiateSongsList();
 		//		fillSpinner();
 		send_button.setEnabled(false);
 		playPauseButton.setEnabled(false);
