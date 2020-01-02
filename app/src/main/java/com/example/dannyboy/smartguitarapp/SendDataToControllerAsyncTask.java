@@ -37,39 +37,16 @@ class SendDataToControllerAsyncTask extends AsyncTask<String, Void, String>{
 		String sentDataStr = params[3];
 
 		try{
-			if(protocol.equals("TCP")){ //Initiate a TCP connection with "controller".
+			DatagramSocket clientSocketSend = new DatagramSocket();
+			InetAddress IPAddressServer = InetAddress.getByName(IP);
+			byte[] sendData = new byte[1024];
+			byte[] receiveData = new byte[1024];
+			sendData = sentDataStr.getBytes();
+			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddressServer, port);
+			clientSocketSend.send(sendPacket);
+			clientSocketSend.close();
 
-				DataOutputStream outToServer;
-				BufferedReader inFromServer;
-				Socket clientSocket;
-				try{
-					clientSocket = new Socket(IP, port);
-					outToServer = new DataOutputStream(clientSocket.getOutputStream());
-					inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				}catch(Exception e){
-					Log.e(TAG, "Could not find server IP:" + IP + "! Is it running?");
-					throw e;
-				}
- 				// Send "binary" data to "controller".
-				Log.v(TAG, "Sending to server: " + sentDataStr);
-				outToServer.writeBytes(sentDataStr);
-
-				inFromServer.readLine(); //Waiting for answer.
-				clientSocket.close();
-
-			}else if(protocol.equals("UDP")){
-
-				DatagramSocket clientSocketSend = new DatagramSocket();
-				InetAddress IPAddressServer = InetAddress.getByName(IP);
-				byte[] sendData = new byte[1024];
-				byte[] receiveData = new byte[1024];
-				sendData = sentDataStr.getBytes();
-				DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddressServer, port);
-				clientSocketSend.send(sendPacket);
-				clientSocketSend.close();
-
-				return "IDLE";
-			}
+			return "IDLE";
 		}catch(Exception e){
 			Log.e(TAG, "Connection AsyncTask Failed");
 			DebugLog.d(TAG, Log.getStackTraceString(e));

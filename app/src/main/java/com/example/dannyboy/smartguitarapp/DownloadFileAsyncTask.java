@@ -43,7 +43,7 @@ class DownloadFileAsyncTask extends AsyncTask<String, Void, Object[]>{
 		String fileURL = params[1];
 		String fileLocation="UNDEFINED";
 		Object[] retObjects = new Object[2];
-		Song newSong = new Song(fileName, fileLocation,fileURL);
+		Song newSong = Song.builder().name(fileName).location(fileLocation).build();
 		Integer retCode = -1;
 
 
@@ -85,7 +85,6 @@ class DownloadFileAsyncTask extends AsyncTask<String, Void, Object[]>{
 					outputStream1.write(data, 0, count);
 
 				}
-				newSong.setInDevice(true);
 				Log.d(TAG, "File " + fileName + " download succeeded!");
 				retCode = 0;
 			}
@@ -118,7 +117,6 @@ class DownloadFileAsyncTask extends AsyncTask<String, Void, Object[]>{
 	@Override
 	protected void onPostExecute(Object[] result){
 		listener.onDone(result);
-
 	}
 
 }

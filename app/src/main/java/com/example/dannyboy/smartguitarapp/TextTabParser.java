@@ -11,54 +11,32 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.ImmutableMap;
 
-/**
- * Created by SlimPC on 21-Dec-17. Test
- */
 
-public class Parser{
+public class TextTabParser implements ControllerSongParser {
 
-	private static final int LAST_FRET = 8;//last_fret in their code
-	private static  int TEMPO_DEFAULT = 127;//last_fret in their code
-	private static final int _PRP = 86;
-	private static final int _EOM = 85;
-	private static final int _HLD = 84;
-	private static final int _RDD = 83;
-	private static final int _GRN = 82;
-	private static final int _BLU = 81;
-	private static final int _OFF = 80;
-	private static final int _INTER = 97;
-	private static final int _NON_INTER = 100;
 
-	private static final int BACK_SLASH = 100;
-
-	private static final int TCP = 0;
-	private static final int UDP = 1;
+	private static int tempoDefault = 127;//last_fret in their code
 
 	private static final int RADIX = 22 + 1;
-	private static final Map<String, Integer> dictT;
-
-	static{
-		dictT = new HashMap<String, Integer>();
-
-		dictT.put("purple", _PRP);
-		dictT.put("red", _RDD);
-		dictT.put("green", _GRN);
-		dictT.put("blue", _BLU);
-	}
+	private static final Map<String, Integer> dictT = ImmutableMap.of("purple", _PRP,
+			"red", _RDD,
+			"green", _GRN,
+			"blue", _BLU);
 
 
+	private String bitString;
 	public String[] tabs_six_lines;
 	public List<Second> time_list = new ArrayList<Second>();
 	//public Second[] time_list;
 	private List<String> column_array = new ArrayList<String>();//FIXME is it ok putting it here
 	// TODO Deal with argument as path, non relevent text in file, multiple lines
 
-	public Parser(Song song,int tempo) {//throws IOException{
+	public TextTabParser(Song song, int tempo) {//throws IOException{
 		String TAG = "myFilter";
 		List<String> lines;
 		try{
@@ -69,7 +47,7 @@ public class Parser{
 		}
 
 		if(tempo>0){
-			TEMPO_DEFAULT=tempo;
+			tempoDefault =tempo;
 		}
 
 		List<String> list = new ArrayList<String>();
@@ -87,13 +65,14 @@ public class Parser{
 			this.parse_six_lines(offset);
 		}
 
+		DebugLog.d("myFilter", "Generating data...");
 		this.add_strings();
 		this.reverse_all_strings();
 		this.shift_left_all();
-
+		this.generateNonBinDataString();
 	}
 
-	private String[] joinInterleav(String[] s1, String[] s2){
+	private String[] joinInterleave(String[] s1, String[] s2){
 		List<String> retList = new ArrayList<String>();
 
 		Boolean prev = false;
@@ -157,11 +136,9 @@ public class Parser{
 		String[] allSigns = listCleaner(lineNoName.split("\\d+"));
 		String[] allFrets = listCleaner(lineNoName.split("\\D+"));
 
-		temp = joinInterleav(allSigns, allFrets);
+		temp = joinInterleave(allSigns, allFrets);
 
 		return TextUtils.join("", temp);
-
-
 	}
 
 	private List<String> changeFretNumRadix(String absolutePath) throws IOException{
@@ -388,7 +365,6 @@ public class Parser{
 					Dot newDot = new Dot(prev_fret, string, "green");
 					LookupArray.get(string).insertDot(new Dot(prev_fret, string, "blue"));
 					//Remove this dot from time list, we're gonna insert a fixed version soon?
-					isInTimeListAtIndex(newDot, time_list.size() - 1);
 					continue;
 				}
 
@@ -408,13 +384,13 @@ public class Parser{
 		int line_len = tabs_six_lines[offset].length();// consider null char as added to length
 
 		for(int col = 1; col < line_len; col++){
-			String column = "";
+			StringBuilder column = new StringBuilder();
 			for(int line = offset; line < 6 + offset; line++){
-				column += tabs_six_lines[line].charAt(col);
+				column.append(tabs_six_lines[line].charAt(col));
 			}
-			if(column.equals("||||||"))
+			if(column.toString().equals("||||||"))
 				continue;
-			if(column.equals("------")){// Detect new macro
+			if(column.toString().equals("------")){// Detect new macro
 				if(column_array.isEmpty()){
 
 					Second emptySecond = new Second();
@@ -422,7 +398,7 @@ public class Parser{
 					// column_array.clear(); TODO: check if needed.
 					continue;
 				}else{
-					parse_column_array(column_array);//Add all of the macros seconds
+					parse_column_array(column_array); // Add all of the macros seconds
 					column_array.clear();
 					Second eomSec = new Second();
 					eomSec.setEom(true);
@@ -432,7 +408,7 @@ public class Parser{
 				}
 
 			}else
-				column_array.add(column);
+				column_array.add(column.toString());
 
 		}
 
@@ -482,60 +458,36 @@ public class Parser{
 		}
 	}
 
-	public String generateBinDataString(Boolean interactive_mode){
+	public void generateNonBinDataString(){
 		StringBuilder sent_stringBuilder = new StringBuilder();
-		StringBuilder sent_stringDannyBuilder = new StringBuilder();
-		if(interactive_mode==false){
-			sent_stringBuilder.append(Character.toString((char) _NON_INTER));
-			sent_stringDannyBuilder.append("N");
-		}else{
-			sent_stringBuilder.append(Character.toString((char) _INTER));
-			sent_stringDannyBuilder.append("I");
-		}
+
 		for(int i = 0; i < time_list.size(); i++){
 			Second curSecond = time_list.get(i);
 			if(curSecond.isEmpty()){ // <--- This line creates noise!
+				sent_stringBuilder.append((char) _HLD);
+				sent_stringBuilder.append((char) tempoDefault);
 
+			} else if(curSecond.isEOM()){
+				sent_stringBuilder.append((char) _HLD);
+				sent_stringBuilder.append((char) tempoDefault);
+				sent_stringBuilder.append((char) _EOM);
 
-				sent_stringBuilder.append(Character.toString((char) _HLD));
-				sent_stringBuilder.append(Character.toString((char) TEMPO_DEFAULT));
-				sent_stringDannyBuilder.append("H");
-				sent_stringDannyBuilder.append(String.valueOf(TEMPO_DEFAULT));
-
-			}else if(curSecond.isEOM()){
-
-
-				sent_stringBuilder.append(Character.toString((char) _HLD));
-				sent_stringBuilder.append(Character.toString((char) TEMPO_DEFAULT));
-				sent_stringBuilder.append(Character.toString((char) _EOM));
-				sent_stringDannyBuilder.append("H");
-				sent_stringDannyBuilder.append(String.valueOf(TEMPO_DEFAULT));
-				sent_stringDannyBuilder.append("E");
-			}else{
-				for(int j = 0; j < curSecond.myDots.size(); j++){
+			} else {
+				for(int j = 0; j < curSecond.myDots.size(); j++) {
 					Dot curDot = curSecond.myDots.get(j);
-
-
-
-					sent_stringBuilder.append(Character.toString((char) ((int) dictT.get(curDot.get_color()))));
-					sent_stringBuilder.append(Character.toString((char) curDot.get_fret()));
-					sent_stringBuilder.append(Character.toString((char) curDot.get_string()));
-					sent_stringDannyBuilder.append(curDot.get_color().substring(0,1).toUpperCase());
-					sent_stringDannyBuilder.append(String.valueOf(curDot.get_fret()));
-					sent_stringDannyBuilder.append(String.valueOf(curDot.get_string()));
+					if (dictT.containsKey(curDot.get_color())) {
+						sent_stringBuilder.append((char) ((int) dictT.get(curDot.get_color())));
+					} else {
+						throw new RuntimeException("Color does not exist");
+					}
+					sent_stringBuilder.append((char) curDot.get_fret());
+					sent_stringBuilder.append((char) curDot.get_string());
 				}
-
-				sent_stringBuilder.append(Character.toString((char) _HLD));
-				sent_stringBuilder.append(Character.toString((char) TEMPO_DEFAULT));
-				sent_stringDannyBuilder.append("H");
-				sent_stringDannyBuilder.append(String.valueOf(TEMPO_DEFAULT));
+				sent_stringBuilder.append((char) _HLD);
+				sent_stringBuilder.append((char) tempoDefault);
 			}
-
 		}
-
-
-//		return sent_stringDannyBuilder.toString();
-		return sent_stringBuilder.toString();
+		this.bitString = sent_stringBuilder.toString();
 	}
 
 	private void light_from_to(int start_fret, int end_fret, int string, String color, Second sec){
@@ -551,36 +503,24 @@ public class Parser{
 
 	}
 
-	private Boolean isInTimeListAtIndex(Dot dot, int index){
-		if(!time_list.get(index).isEmpty() && !time_list.get(index).isEOM())
-			return time_list.get(index).isDotInMyDots(dot);
-		return false;
-	}
+	public String sendToGuitar(Activity mainActiviry, String IP, String port,Boolean interactive_mode){
+		DebugLog.d("myFilter", "Sending data to controller...");
 
-
-	public String sendDataToController(Activity mainActiviry,String PROTOCOL, String IP, String port,Boolean interactive_mode){
-		String bitString = generateBinDataString(interactive_mode);
 		String serverAnswer = "null";
-
 		try{
-			SendDataToControllerAsyncTask sendDataToControllerAsyncTask = new SendDataToControllerAsyncTask(mainActiviry);
-			serverAnswer = sendDataToControllerAsyncTask.execute(PROTOCOL, IP, port, bitString).get();
-
+			return (new SendDataToControllerAsyncTask(mainActiviry)).execute("UDP", IP, port, bitString).get();
 		}catch(Exception e){
-
 			Log.e("myFilter", "Exception in sendDataToControllerAsyncTask");
-
 		}
 		return serverAnswer;
 	}
 
-	public String sendToGuitar(Activity mainActivity, String controllerIP, String controllerPort,  Boolean interactive_mode){
-
-		DebugLog.d("myFilter", "Generating data...");
-		// This for loop should be in a different thread!
-
-		DebugLog.d("myFilter", "Sending data to controller...");
-		return this.sendDataToController(mainActivity,"UDP", controllerIP, controllerPort, interactive_mode);
-
+	public String getControllerString(boolean isInteractiveMode) {
+		if(!isInteractiveMode){
+			return ((char) _NON_INTER) + bitString;
+		}else{
+			return ((char) _INTER) + bitString;
+		}
 	}
+
 }

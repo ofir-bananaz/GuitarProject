@@ -157,8 +157,9 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 				MediaPlayer success = MediaPlayer.create(MainActivity.this, R.raw.success);
 
 				try{
-
-					serverAnswer = (new Parser(lastSelectedSong,tempo)).sendToGuitar(MainActivity.this, controllerIP, controllerPort, interactive_modeCheckBox.isChecked());
+					TextTabParser textTabParser = new TextTabParser(lastSelectedSong, tempo);
+					ControllerSongLoader loader = new ControllerSongLoader(MainActivity.this, controllerIP, controllerPort, textTabParser.getControllerString(interactive_modeCheckBox.isChecked()));
+					serverAnswer = loader.sendToGuitar();
 				}catch(Exception e){
 					error.start();
 					return;
@@ -216,8 +217,9 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 						String parsedSong = py.getModule("myParser").callAttr("parse", "m a d e -  w i t h - p y t h o n").toJava(String.class);
 
 
-						(new Parser(lastSelectedSong, tempo)).sendToGuitar(MainActivity.this, controllerIP, controllerPort, interactive_modeCheckBox.isChecked());
-						// Data sent. Here we assume data is always sent successfully and confirmed by guitar controller
+						TextTabParser textTabParser = new TextTabParser(lastSelectedSong, tempo);
+						ControllerSongLoader loader = new ControllerSongLoader(MainActivity.this, controllerIP, controllerPort, textTabParser.getControllerString(interactive_modeCheckBox.isChecked()));
+						loader.sendToGuitar();						// Data sent. Here we assume data is always sent successfully and confirmed by guitar controller
 						lastSelectedSong.setInGuitar(true);
 						DebugLog.d(TAG, "Song data sent.");
 						stop_button.setEnabled(true);
@@ -386,23 +388,21 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 
 		}else {
             DebugLog.d(TAG, "Checking for new songs in: " + folder.getAbsolutePath());
-            lastSelectedSong = new Song("<Select Song>");
+
+            lastSelectedSong = Song.builder().name("<Select Song>").build();
             songArrayList.add(lastSelectedSong);
 
 			for(File file :  folder.listFiles()){
 				if(file.isFile()){
 					DebugLog.d(TAG, "Found: " + file.getName());
-					songArrayList.add(new Song(file.getName(), Environment.getExternalStorageDirectory() + "/" + songsFolderName));
+					Song song = Song.builder().name(file.getName()).location(folder.getAbsolutePath()).build();
+					songArrayList.add(song);
 				}
 			}
 		}
-
-
         Python py = Python.getInstance();
         DebugLog.d(TAG, py.getModule("myParser").callAttr("parse", "m a d e -  w i t h - p y t h o n").toJava(String.class));
-
-
-		songArrayList.add(new Song("Download new song from URL..."));
+		songArrayList.add(Song.builder().name("Download new song from URL...").build());
 	}
 
 }

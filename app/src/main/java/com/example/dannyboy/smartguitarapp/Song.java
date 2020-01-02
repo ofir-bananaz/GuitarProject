@@ -4,15 +4,17 @@ package com.example.dannyboy.smartguitarapp;
  * Created by SlimPC on 22-Dec-17.
  */
 
+import lombok.Builder;
+
 /**
  * Song is a basic object used to keep a song meta-data.
  */
+@Builder
 public class Song {
-    private String _name;
-    private String _url;
-    private String _location;
-    private Boolean _isInDevice;
-    private Boolean _inGuitar;
+    private String name;
+    private String location;
+    private Boolean inGuitar;
+    private ControllerSongParser controllerSongParser;
 
     /**
      * Checks if this song has already been sent to the guitar controller
@@ -20,7 +22,7 @@ public class Song {
 	 *
      */
     public Boolean isInGuitar(){
-        return _inGuitar;
+        return inGuitar;
     }
 
 	/**
@@ -28,66 +30,28 @@ public class Song {
 	 * @param _inGuitar - Use true to mark it as sent false otherwise
 	 */
     public void setInGuitar(Boolean _inGuitar){
-        this._inGuitar = _inGuitar;
+        this.inGuitar = _inGuitar;
     }
 
-
-	/**
-	 * Mark the song as residing in device storage - used to ensure we don't use a song before its download has been complete (e.g. when importing from URL)
-	 * @param _isInDevice - Use true to mark it as resides in the device storage
-	 */
-    public void setInDevice(Boolean _isInDevice) {
-        this._isInDevice = _isInDevice;
-    }
 
 	/**
 	 * @param name Song file name
 	 * @param location Location on the device
-	 * @param URL	Song URL
 	 */
-    Song(String name, String location, String URL){
-        _name=name;
-        _location=location;
-        _isInDevice=false;
-        _url=URL;
-        _inGuitar =false;
-    }
-    Song(String name, String location){
-        _name=name;
-        _location=location;
-        _isInDevice=true;
-        _url="LOCAL_FILE";
-        _inGuitar =false;
-    }
-	Song(String name){
-		_name=name;
-		_url="UNDEFINED_URL";
-		_location="UNDEFINED_LOCATION";
-		_isInDevice=false;
-        _inGuitar =false;
-
-	}
-    Song(){
-        _name="UNDEFINED_NAME";
-        _url="UNDEFINED_URL";
-        _location="UNDEFINED_LOCATION";
-        _isInDevice=false;
-        _inGuitar =false;
-
+    Song(String name, String location, Boolean inGuitar, ControllerSongParser controllerSongParser){
+        this.name = name;
+        this.location = location;
+        this.inGuitar = false;
+        this.controllerSongParser = controllerSongParser;
     }
 
 	/**
 	 * Used to get the complete path of a Song
 	 * @return path as a String.
 	 */
-//    public Boolean isInDevice(){
-//        return _isInDevice;
-//    }
-//    public String getURL() {
-//        return _url;
-//    }
-//	public String getLocation(){return _location;}
-	public String getAbsolutePath(){return _location+"/"+_name;}
+	public String getAbsolutePath(){
+	    return location + "/" + name;
+	}
 
 
 	/**
@@ -95,7 +59,7 @@ public class Song {
 	 * @return
 	 */
     public String getName() {
-        return _name;
+        return name;
     }
 
 	/**
@@ -103,7 +67,7 @@ public class Song {
 	 * @return
 	 */
 	public String toString(){
-        return _name;
+        return name;
     }
 
 
@@ -118,15 +82,15 @@ public class Song {
         if (o == null || getClass() != o.getClass()) return false;
 
         Song Song = (Song) o;
-        if(_name.equals("<Select Song>"))
+        if(name.equals("<Select Song>"))
             return true;
-        if(Song._name.equals("<Select Song>"))
+        if(Song.name.equals("<Select Song>"))
             return false;
-        return _name.equals(Song._name);
+        return name.equals(Song.name);
     }
 
     @Override
     public int hashCode() {
-        return _name.hashCode();
+        return name.hashCode();
     }
 }

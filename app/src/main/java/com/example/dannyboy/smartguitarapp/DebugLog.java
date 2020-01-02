@@ -38,7 +38,7 @@ public class DebugLog{
 			int lineNumber = Thread.currentThread().getStackTrace()[3].getLineNumber();
 			Log.d(TAG, className + "." + methodName + "(), line " + lineNumber + ": " + message);
 			if(debugView != null){
-				updateDebugLog(TAG,message);
+				updateDebugLog(TAG, message);
 			}
 		}
 	}
