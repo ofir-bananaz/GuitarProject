@@ -7,24 +7,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ae7d0c1f-8a64-405b-9254-3c1b7a7de785" name="Default Changelist" comment="Managed to activate my own python code">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_code_findbugs_jsr305_3_0_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_errorprone_error_prone_annotations_2_3_4_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_guava_failureaccess_1_0_1_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_guava_guava_28_2_android_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_guava_listenablefuture_9999_0_empty_to_avoid_conflict_with_guava_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_j2objc_j2objc_annotations_1_3_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_checkerframework_checker_compat_qual_2_5_5_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_projectlombok_lombok_1_18_10_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongLoader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongParser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/GuitarProParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/generated/source/buildConfig/debug/com/example/dannyboy/smartguitarapp/BuildConfig.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/multi-v2/debug.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/blame/res/debug/multi-v2/values-af.json" beforeDir="false" />
@@ -621,12 +608,12 @@
       <change beforePath="$PROJECT_DIR$/app/build/outputs/apk/debug/app-debug.apk" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/outputs/apk/debug/output.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/outputs/apk/debug/output.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/outputs/logs/manifest-merger-debug-report.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/DebugLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/DebugLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/DownloadFileAsyncTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/DownloadFileAsyncTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/TextTabParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/SendDataToControllerAsyncTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/SendDataToControllerAsyncTask.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/Song.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/Song.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/TextTabParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/TextTabParser.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -689,28 +676,33 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="146">
-              <caret line="213" column="40" selection-start-line="213" selection-start-column="24" selection-end-line="213" selection-end-column="40" />
+            <state relative-caret-position="289">
+              <caret line="50" column="74" selection-start-line="50" selection-start-column="74" selection-end-line="50" selection-end-column="74" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#5159#6836#0" expanded="true" />
+                <element signature="e#6835#6836#0" expanded="true" />
+                <element signature="e#12254#12255#0" expanded="true" />
+                <element signature="e#12277#12278#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/Song.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="40" column="55" selection-start-line="40" selection-start-column="39" selection-end-line="40" selection-end-column="55" />
-              <folding>
-                <element signature="e#1536#1537#0" expanded="true" />
-                <element signature="e#1572#1573#0" expanded="true" />
-                <element signature="e#1659#1660#0" expanded="true" />
-                <element signature="e#1687#1688#0" expanded="true" />
-                <element signature="e#1774#1775#0" expanded="true" />
-                <element signature="e#1802#1803#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="612">
+              <caret line="40" column="98" selection-start-line="40" selection-start-column="98" selection-end-line="40" selection-end-column="98" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/GuitarProParser.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="5" selection-start-line="5" selection-end-line="12" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -719,10 +711,22 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/TextTabParser.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="146">
-              <caret line="489" selection-start-line="489" selection-end-line="489" />
+              <caret line="459" selection-start-line="459" selection-end-line="459" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1418#1426#0" expanded="true" />
+                <element signature="e#15951#15959#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongLoader.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="15" column="9" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="9" />
+              <folding>
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -732,37 +736,7 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongParser.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="306">
-              <caret line="18" column="37" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="37" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongLoader.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="23" selection-start-line="23" selection-end-line="23" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/SendDataToControllerAsyncTask.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="29" column="5" selection-start-line="29" selection-start-column="5" selection-end-line="29" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/DownloadFileAsyncTask.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="226">
-              <caret line="87" selection-start-line="87" selection-end-line="87" />
+              <caret line="18" column="31" selection-start-line="18" selection-start-column="31" selection-end-line="18" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -805,6 +779,7 @@
         <option value="Python Script" />
         <option value="Class" />
         <option value="Interface" />
+        <option value="Singleton" />
       </list>
     </option>
   </component>
@@ -833,6 +808,10 @@
       <find>google</find>
       <find>danny</find>
       <find>DownloadFileAsyncTask</find>
+      <find>send</find>
+      <find>getControllerString</find>
+      <find>controllerIP</find>
+      <find>sendTo</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -852,17 +831,18 @@
         <option value="$PROJECT_DIR$/app/src/main/python/myParser.py" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/DebugLog.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/SendDataToControllerAsyncTask.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/GuitarSongLoader.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongLoader.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongParser.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/Parser.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/TabParser.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/TextTabParser.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/DownloadFileAsyncTask.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/TextTabParser.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/SendDataToControllerAsyncTask.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongParser.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/GuitarProParser.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/Song.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongLoader.java" />
       </list>
     </option>
   </component>
@@ -945,6 +925,7 @@
     <property name="project.structure.last.edited" value="Dependencies" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
@@ -1070,8 +1051,24 @@
       <option name="project" value="LOCAL" />
       <updated>1577975636034</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Code refactor. &#10;- Added ControllerSongParser Interface and TextTabParser implementation.&#10;- Song Refactor. &#10;- Remove redundant code.">
+      <created>1577986366367</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1577986366367</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1088,15 +1085,15 @@
       <window_info id="Capture Tool" order="8" />
       <window_info anchor="bottom" id="Version Control" order="0" />
       <window_info anchor="bottom" id="Logcat" order="1" />
-      <window_info anchor="bottom" id="TODO" order="2" />
+      <window_info anchor="bottom" id="TODO" order="2" weight="0.32936078" />
       <window_info anchor="bottom" id="Find" order="3" weight="0.32936078" />
       <window_info anchor="bottom" id="Terminal" order="4" />
       <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" />
-      <window_info anchor="bottom" id="Build" order="6" weight="0.32286024" />
+      <window_info active="true" anchor="bottom" id="Build" order="6" visible="true" weight="0.32286024" />
       <window_info anchor="bottom" id="Messages" order="7" weight="0.32936078" />
       <window_info anchor="bottom" id="Android Profiler" order="8" weight="0.32936078" />
       <window_info anchor="bottom" id="Run" order="9" weight="0.20476706" />
-      <window_info active="true" anchor="bottom" id="Debug" order="10" visible="true" weight="0.468039" />
+      <window_info anchor="bottom" id="Debug" order="10" weight="0.094257854" />
       <window_info anchor="right" id="Device File Explorer" order="0" side_tool="true" />
       <window_info anchor="right" id="Capture Analysis" order="1" />
       <window_info anchor="right" id="Gradle" order="2" />
@@ -1138,7 +1135,8 @@
     <MESSAGE value="More Fixes for MainActivity resources" />
     <MESSAGE value="Managed to activate my own python code" />
     <MESSAGE value="Code refactor" />
-    <option name="LAST_COMMIT_MESSAGE" value="Code refactor" />
+    <MESSAGE value="Code refactor. &#10;- Added ControllerSongParser Interface and TextTabParser implementation.&#10;- Song Refactor. &#10;- Remove redundant code." />
+    <option name="LAST_COMMIT_MESSAGE" value="Code refactor. &#10;- Added ControllerSongParser Interface and TextTabParser implementation.&#10;- Song Refactor. &#10;- Remove redundant code." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1157,45 +1155,27 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/TextTabParser.java</url>
-          <line>52</line>
-          <properties />
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/TextTabParser.java</url>
-          <line>436</line>
+          <line>406</line>
           <properties />
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/TextTabParser.java</url>
-          <line>446</line>
+          <line>416</line>
           <properties />
           <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/TextTabParser.java</url>
-          <line>383</line>
-          <properties />
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/TextTabParser.java</url>
-          <line>461</line>
+          <line>431</line>
           <properties />
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/TextTabParser.java</url>
-          <line>489</line>
+          <line>459</line>
           <properties />
           <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-field">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongParser.java</url>
-          <line>4</line>
-          <properties field="LAST_FRET" class="com.example.dannyboy.smartguitarapp.ControllerSongParser" />
-          <option name="timeStamp" value="28" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -1375,13 +1355,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/SendDataToControllerAsyncTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="29" column="5" selection-start-line="29" selection-start-column="5" selection-end-line="29" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="833">
@@ -1406,62 +1379,89 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongLoader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" selection-start-line="23" selection-end-line="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/DownloadFileAsyncTask.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
+        <state relative-caret-position="1207">
           <caret line="87" selection-start-line="87" selection-end-line="87" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/MainActivity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/SendDataToControllerAsyncTask.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="213" column="40" selection-start-line="213" selection-start-column="24" selection-end-line="213" selection-end-column="40" />
+        <state relative-caret-position="272">
+          <caret line="16" column="4" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/SendInstruction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-28/android.jar!/android/widget/Spinner.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/TextTabParser.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="146">
-          <caret line="489" selection-start-line="489" selection-end-line="489" />
+          <caret line="459" selection-start-line="459" selection-end-line="459" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1418#1426#0" expanded="true" />
+            <element signature="e#15951#15959#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/Song.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="612">
+          <caret line="40" column="98" selection-start-line="40" selection-start-column="98" selection-end-line="40" selection-end-column="98" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/GuitarProParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" selection-start-line="5" selection-end-line="12" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongParser.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
-          <caret line="18" column="37" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="37" />
+          <caret line="18" column="31" selection-start-line="18" selection-start-column="31" selection-end-line="18" selection-end-column="31" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/Song.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="40" column="55" selection-start-line="40" selection-start-column="39" selection-end-line="40" selection-end-column="55" />
+        <state relative-caret-position="289">
+          <caret line="50" column="74" selection-start-line="50" selection-start-column="74" selection-end-line="50" selection-end-column="74" />
           <folding>
-            <element signature="e#1536#1537#0" expanded="true" />
-            <element signature="e#1572#1573#0" expanded="true" />
-            <element signature="e#1659#1660#0" expanded="true" />
-            <element signature="e#1687#1688#0" expanded="true" />
-            <element signature="e#1774#1775#0" expanded="true" />
-            <element signature="e#1802#1803#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#5159#6836#0" expanded="true" />
+            <element signature="e#6835#6836#0" expanded="true" />
+            <element signature="e#12254#12255#0" expanded="true" />
+            <element signature="e#12277#12278#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/dannyboy/smartguitarapp/ControllerSongLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="9" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

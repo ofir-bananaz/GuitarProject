@@ -16,9 +16,15 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
-
 public class TextTabParser implements ControllerSongParser {
 
+	private static final String TAG = "myFilter";
+
+	private static final TextTabParser ourInstance = new TextTabParser();
+
+	static TextTabParser getInstance() {
+		return ourInstance;
+	}
 
 	private static int tempoDefault = 127;//last_fret in their code
 
@@ -35,42 +41,6 @@ public class TextTabParser implements ControllerSongParser {
 	//public Second[] time_list;
 	private List<String> column_array = new ArrayList<String>();//FIXME is it ok putting it here
 	// TODO Deal with argument as path, non relevent text in file, multiple lines
-
-	public TextTabParser(Song song, int tempo) {//throws IOException{
-		String TAG = "myFilter";
-		List<String> lines;
-		try{
-			lines = changeFretNumRadix(song.getAbsolutePath());
-		}catch (IOException e){
-			DebugLog.e(TAG,"CRITICAL ERROR: Invalid song path");
-			return;
-		}
-
-		if(tempo>0){
-			tempoDefault =tempo;
-		}
-
-		List<String> list = new ArrayList<String>();
-		for(String str : lines){
-			Log.i(TAG, "Reading line:" + str);
-			if(str.length() > 1){
-				String lineStart = str.substring(0, 2);
-				if(lineStart.equals("E|") || lineStart.equals("e|") || lineStart.equals("e-") || lineStart.equals("E-") || lineStart.equals("B|") || lineStart.equals("G|") || lineStart.equals("D|") || lineStart.equals("A|"))
-					list.add(str);
-			}
-		}
-		tabs_six_lines = list.toArray(new String[0]);
-
-		for(int offset = 0; offset < Array.getLength(this.tabs_six_lines); offset += 6){
-			this.parse_six_lines(offset);
-		}
-
-		DebugLog.d("myFilter", "Generating data...");
-		this.add_strings();
-		this.reverse_all_strings();
-		this.shift_left_all();
-		this.generateNonBinDataString();
-	}
 
 	private String[] joinInterleave(String[] s1, String[] s2){
 		List<String> retList = new ArrayList<String>();
@@ -503,19 +473,42 @@ public class TextTabParser implements ControllerSongParser {
 
 	}
 
-	public String sendToGuitar(Activity mainActiviry, String IP, String port,Boolean interactive_mode){
-		DebugLog.d("myFilter", "Sending data to controller...");
 
-		String serverAnswer = "null";
+	public String getControllerString(Song song, int tempo, boolean isInteractiveMode) {
+		List<String> lines;
 		try{
-			return (new SendDataToControllerAsyncTask(mainActiviry)).execute("UDP", IP, port, bitString).get();
-		}catch(Exception e){
-			Log.e("myFilter", "Exception in sendDataToControllerAsyncTask");
+			lines = changeFretNumRadix(song.getAbsolutePath());
+		}catch (IOException e){
+			DebugLog.e(TAG,"CRITICAL ERROR: Invalid song path");
+			throw new IllegalArgumentException("Invalid song Path from device");
 		}
-		return serverAnswer;
-	}
 
-	public String getControllerString(boolean isInteractiveMode) {
+		if(tempo>0){
+			tempoDefault = tempo;
+		}
+
+		List<String> list = new ArrayList<String>();
+		for(String str : lines){
+			Log.i(TAG, "Reading line:" + str);
+			if(str.length() > 1){
+				String lineStart = str.substring(0, 2);
+				if(lineStart.equals("E|") || lineStart.equals("e|") || lineStart.equals("e-") || lineStart.equals("E-") || lineStart.equals("B|") || lineStart.equals("G|") || lineStart.equals("D|") || lineStart.equals("A|"))
+					list.add(str);
+			}
+		}
+		tabs_six_lines = list.toArray(new String[0]);
+
+		for(int offset = 0; offset < Array.getLength(this.tabs_six_lines); offset += 6){
+			this.parse_six_lines(offset);
+		}
+
+		DebugLog.d("myFilter", "Generating data...");
+		this.add_strings();
+		this.reverse_all_strings();
+		this.shift_left_all();
+		this.generateNonBinDataString();
+
+
 		if(!isInteractiveMode){
 			return ((char) _NON_INTER) + bitString;
 		}else{

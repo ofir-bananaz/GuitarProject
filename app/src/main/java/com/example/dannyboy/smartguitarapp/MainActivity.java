@@ -23,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.chaquo.python.Python;
-
 import java.io.File;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -49,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 	private TextView debugView;
 	private Spinner spinner;
 	private PromptDialog promptDialog;
+
+	private ControllerSongLoader controllerSongLoader = new ControllerSongLoader(MainActivity.this); // Use as a singleton
 
 
 	private void requestPermissions() {
@@ -157,9 +157,8 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 				MediaPlayer success = MediaPlayer.create(MainActivity.this, R.raw.success);
 
 				try{
-					TextTabParser textTabParser = new TextTabParser(lastSelectedSong, tempo);
-					ControllerSongLoader loader = new ControllerSongLoader(MainActivity.this, controllerIP, controllerPort, textTabParser.getControllerString(interactive_modeCheckBox.isChecked()));
-					serverAnswer = loader.sendToGuitar();
+					String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), tempo);
+					serverAnswer = controllerSongLoader.load(preparedSong, controllerIP, controllerPort);
 				}catch(Exception e){
 					error.start();
 					return;
@@ -212,15 +211,9 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 					}
 
 					if(!lastSelectedSong.isInGuitar()){
+						String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), tempo);
+						controllerSongLoader.load(preparedSong, controllerIP, controllerPort);
 
-						Python py = Python.getInstance();
-						String parsedSong = py.getModule("myParser").callAttr("parse", "m a d e -  w i t h - p y t h o n").toJava(String.class);
-
-
-						TextTabParser textTabParser = new TextTabParser(lastSelectedSong, tempo);
-						ControllerSongLoader loader = new ControllerSongLoader(MainActivity.this, controllerIP, controllerPort, textTabParser.getControllerString(interactive_modeCheckBox.isChecked()));
-						loader.sendToGuitar();						// Data sent. Here we assume data is always sent successfully and confirmed by guitar controller
-						lastSelectedSong.setInGuitar(true);
 						DebugLog.d(TAG, "Song data sent.");
 						stop_button.setEnabled(true);
 
@@ -277,9 +270,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 								//For testing (Song ends after TIMEOUT):
 								serverResponse = "IDLE";
 								long difference = System.currentTimeMillis() - startTime;
-								//								if(serverResponse.equals("IDLE")){
-								//									DebugLog.d(TAG, "Song finished! (Length: "+difference+")");
-								//								}
+
 								stop_button.post(new Runnable(){
 									public void run(){
 										stop_button.setEnabled(false);
@@ -377,6 +368,16 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 		}
 	}
 
+
+	private ControllerSongParser controllerByFileType(String filePath) {
+		if (filePath.contains(".gp")) {
+			return com.example.dannyboy.smartguitarapp.GuitarProParser.getInstance();
+		} else if (filePath.contains(".txt")) {
+			return com.example.dannyboy.smartguitarapp.TextTabParser.getInstance();
+		}
+		throw new IllegalArgumentException("Could not match a parser to filetype");
+	}
+
 	private void initiateSongsList(){
 		if(!folder.isDirectory()){
 			//			Commented line is the same, but containing a symbolic link.
@@ -395,13 +396,15 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 			for(File file :  folder.listFiles()){
 				if(file.isFile()){
 					DebugLog.d(TAG, "Found: " + file.getName());
-					Song song = Song.builder().name(file.getName()).location(folder.getAbsolutePath()).build();
+
+					Song song = Song.builder().name(file.getName())
+							.location(folder.getAbsolutePath())
+							.controllerSongParser(controllerByFileType(file.getAbsolutePath()))
+							.build();
 					songArrayList.add(song);
 				}
 			}
 		}
-        Python py = Python.getInstance();
-        DebugLog.d(TAG, py.getModule("myParser").callAttr("parse", "m a d e -  w i t h - p y t h o n").toJava(String.class));
 		songArrayList.add(Song.builder().name("Download new song from URL...").build());
 	}
 

@@ -93,4 +93,8 @@ public class Song {
     public int hashCode() {
         return name.hashCode();
     }
+
+    public String prepareSongForController(boolean isInteractive, int tempo) {
+        return controllerSongParser.getControllerString(this, tempo, isInteractive);
+    }
 }

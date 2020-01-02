@@ -3,22 +3,11 @@ package com.example.dannyboy.smartguitarapp;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.ToggleButton;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Socket;
-
-/**
- * Created by dannyboy on 26/12/2017.
- */
 
 class SendDataToControllerAsyncTask extends AsyncTask<String, Void, String>{
 	private static final int TIMEOUT = 5*1000;
@@ -31,7 +20,6 @@ class SendDataToControllerAsyncTask extends AsyncTask<String, Void, String>{
 
 	@Override
 	protected String doInBackground(String... params){
-		String protocol = params[0];
 		String IP = params[1];
 		int port = Integer.parseInt(params[2]);
 		String sentDataStr = params[3];
