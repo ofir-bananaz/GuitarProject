@@ -1,10 +1,14 @@
 package com.example.dannyboy.smartguitarapp;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -19,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.chaquo.python.Python;
+
 import java.io.File;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -31,8 +37,9 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 	private static final int TCP_port = 10000;
 	private static final String UDP_IP = "192.168.2.100";
 	private static final int UDP_port = 10080; //Port 80 cannot be used in Linux
-	private static String songsFolderName = "SmartGuitar";
-	public final static String songsFolderAbsolutePath = Environment.getExternalStorageDirectory() + "/" + songsFolderName;
+    private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 1001;
+    private static String songsFolderName = "SmartGuitar";
+    private final File folder = new File(Environment.getExternalStorageDirectory(), songsFolderName);
 	String TAG = "myFilter";
 	Song lastSelectedSong = null;
 	Song lastSentSong = null;
@@ -53,8 +60,24 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 	private DebugLog debugLog;
 	private PromptDialog promptDialog;
 
+
+	private void requestPermissions() {
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+            //ask for permission
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission_group.STORAGE}, READ_EXTERNAL_STORAGE_PERMISSION_CODE);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, READ_EXTERNAL_STORAGE_PERMISSION_CODE);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_WIFI_STATE}, READ_EXTERNAL_STORAGE_PERMISSION_CODE);
+                requestPermissions(new String[]{Manifest.permission.INTERNET}, READ_EXTERNAL_STORAGE_PERMISSION_CODE);
+            }
+        }
+    }
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
+        requestPermissions();
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		interactive_modeCheckBox = findViewById(R.id.checkBox);
@@ -71,13 +94,16 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 		debugView.setMovementMethod(new ScrollingMovementMethod());
 		debugLog = new DebugLog(true, debugView);
 		promptDialog = new PromptDialog(MainActivity.this);
-		//initiateSongsList();
+		initiateSongsList();
 		//		fillSpinner();
 		send_button.setEnabled(false);
 		playPauseButton.setEnabled(false);
 		stop_button.setEnabled(false);
 		interactive_modeCheckBox.setChecked(false);
 		interactive_modeCheckBox.setEnabled(true);
+
+
+
 
 
 		// Create an ArrayAdapter using the array list and a default spinner layout
@@ -374,33 +400,31 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 	}
 
 	private void initiateSongsList(){
-		File folder = new File(MainActivity.songsFolderAbsolutePath);
 		if(!folder.isDirectory()){
 			//			Commented line is the same, but containing a symbolic link.
 			//			Log.d(TAG,"First time launch, creating song folder; path: "+Environment.getExternalStorageDirectory()+"/"+songsFolderName);
-			DebugLog.d(TAG, "First time launch, creating song folder; path: " + "sdcard" + "/" + songsFolderName);
+			DebugLog.d(TAG, "First time launch, creating song folder; path: " + folder.getAbsolutePath());
 			if(!folder.mkdirs()){
 				Log.e(TAG, "Creating song directory failed!");
 			}
 
-		}else{
-			DebugLog.d(TAG, "Checking for new songs in: " + "sdcard" + "/" + songsFolderName);
-			lastSelectedSong = new Song("<Select Song>");
-			songArrayList.add(lastSelectedSong);
+		}else {
+            DebugLog.d(TAG, "Checking for new songs in: " + folder.getAbsolutePath());
+            lastSelectedSong = new Song("<Select Song>");
+            songArrayList.add(lastSelectedSong);
 
-
-			File[] listOfFiles = folder.listFiles();
-
-			for(File file : listOfFiles){
+			for(File file :  folder.listFiles()){
 				if(file.isFile()){
 					DebugLog.d(TAG, "Found: " + file.getName());
 					songArrayList.add(new Song(file.getName(), Environment.getExternalStorageDirectory() + "/" + songsFolderName));
-
 				}
 			}
-
-
 		}
+
+
+        Python py = Python.getInstance();
+        DebugLog.d(TAG, py.getModule("myParser").callAttr("parse", "m a d e -  w i t h - p y t h o n").toJava(String.class));
+
 
 		songArrayList.add(new Song("Download new song from URL..."));
 	}

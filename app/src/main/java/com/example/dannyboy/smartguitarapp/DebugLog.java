@@ -1,8 +1,6 @@
 package com.example.dannyboy.smartguitarapp;
 
-import android.text.Layout;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 /**
@@ -10,7 +8,7 @@ import android.widget.TextView;
  */
 public class DebugLog{
 
-	private static boolean DEBUG = false;
+	private static boolean DEBUG = true;
 	private static TextView debugView = null;
 	private static String debugLogHistory = null;
 	private static Integer lines=0;
