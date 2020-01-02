@@ -45,7 +45,7 @@ public class Song {
 	 * @param location Location on the device
 	 * @param URL	Song URL
 	 */
-    Song(String name, String location,String URL){
+    Song(String name, String location, String URL){
         _name=name;
         _location=location;
         _isInDevice=false;

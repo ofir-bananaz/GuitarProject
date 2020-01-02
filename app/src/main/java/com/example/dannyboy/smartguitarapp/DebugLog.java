@@ -12,7 +12,6 @@ public class DebugLog{
 	private static TextView debugView = null;
 	private static String debugLogHistory = null;
 	private static Integer lines=0;
-	private static int scrollAmount;
 
 	/**
 	 * Used as Logger. Stores all messages passed to it, and outputs them in a sort, formatted manner (as a list).
@@ -24,7 +23,6 @@ public class DebugLog{
 		DEBUG = debug;
 		debugView = debugViewIn;
 		debugLogHistory = "";
-		scrollAmount=0;
 	}
 
 	/**
@@ -106,26 +104,25 @@ public class DebugLog{
 	 * Used internaly to format all the messages as a numbered list where each message is numbered according to order of creation.
 	 * @param id message id (i.e. serial number)
 	 * @param message actual message
-	 * @return
 	 */
 	private static String formatMessage(Integer id,String message){
-		Boolean firstLine=true;
-		Integer lineLength=40;
-		Integer totalLines=(int)Math.ceil(message.length()/((float)lineLength));
+		boolean firstLine=true;
+		int lineLength=40;
+		int totalLines=(int)Math.ceil(message.length()/((float)lineLength));
 
 		StringBuilder builder = new StringBuilder();
-		for(int line=0;line<totalLines;line++){
+		for(int line=0; line<totalLines; line++){
 			String currentLine="";
 			int posStart=line*lineLength;
 			int posEnd=(line+1)*lineLength;
 			if (posEnd>message.length()){
 				posEnd=message.length();
 			}
-			if(firstLine){
+			if (firstLine) {
 				currentLine=String.format("%3d %s\n",id,message.substring(posStart,posEnd));
 				firstLine=false;
 			}
-			else{
+			else {
 				currentLine=String.format("    %s\n",message.substring(posStart,posEnd));
 			}
 			builder.append(currentLine);

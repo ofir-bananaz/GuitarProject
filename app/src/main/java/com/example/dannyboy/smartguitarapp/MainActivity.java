@@ -32,11 +32,7 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements OnDoneListener{
-	public final static String EXTRA_MESSAGE = "com.example.slimpc.lab_test2";
-	private static final String TCP_IP = "127.0.0.1";
-	private static final int TCP_port = 10000;
-	private static final String UDP_IP = "192.168.2.100";
-	private static final int UDP_port = 10080; //Port 80 cannot be used in Linux
+
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 1001;
     private static String songsFolderName = "SmartGuitar";
     private final File folder = new File(Environment.getExternalStorageDirectory(), songsFolderName);
@@ -50,14 +46,8 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 	private EditText ipEditText;
 	private EditText portEditText;
 	private EditText tempoEditText;
-	private TextView resTextView;
 	private TextView debugView;
 	private Spinner spinner;
-	//Must be declared here:
-	private String fileURL = "undefined";
-	private String fileName = "";//tab file name to be parsed!!
-	private String binString = "nullDataString";
-	private DebugLog debugLog;
 	private PromptDialog promptDialog;
 
 
@@ -92,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 		debugView.setMaxLines(Integer.MAX_VALUE);
 		spinner = findViewById(R.id.spinner);
 		debugView.setMovementMethod(new ScrollingMovementMethod());
-		debugLog = new DebugLog(true, debugView);
+		new DebugLog(true, debugView);
 		promptDialog = new PromptDialog(MainActivity.this);
 		initiateSongsList();
 		//		fillSpinner();
@@ -132,15 +122,12 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 					Log.d(TAG, "Spinner initiation failed!");
 					e.printStackTrace();
 				}
-
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parentView){
 				Log.d(TAG, "User canceled selection");//<--Doesn't show on cancellation for some reason
-
 				Toast.makeText(getApplicationContext(), "User canceled selection...", Toast.LENGTH_LONG).show();
-
 			}
 
 		});
@@ -168,37 +155,24 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 
 				MediaPlayer error = MediaPlayer.create(MainActivity.this, R.raw.error);
 				MediaPlayer success = MediaPlayer.create(MainActivity.this, R.raw.success);
-//				if(!lastSelectedSong.isInDevice()){
-//					DebugLog.e(TAG, "Invalid song selection");
-//					return;
-//				}
-
 
 				try{
 
 					serverAnswer = (new Parser(lastSelectedSong,tempo)).sendToGuitar(MainActivity.this, controllerIP, controllerPort, interactive_modeCheckBox.isChecked());
 				}catch(Exception e){
-					//Log.e(TAG, "Error: could not generate bitString for file name " + fileName);
-					//					DebugLog.e(TAG, "Error: exception while trying to send data" + fileName,e);
 					error.start();
 					return;
 				}
 
-
 				if(serverAnswer.contains("Error: Both strings are NOT equal!")){
-					//					resTextView.setTextColor(Color.RED);
 					DebugLog.d(TAG, "Failure: Both strings are NOT equal!");
 					error.start();
 				}else if(serverAnswer.contains("RESPONSE_TIME_TIMEOUT")){
 					DebugLog.d(TAG, "Failure: Server response timeout");
-					return;
 				}else{
-					//					resTextView.setTextColor(Color.GREEN);
 					DebugLog.d(TAG, "Success: both strings are identical!");
 					success.start();
 				}
-
-
 			}
 		});
 
@@ -208,8 +182,8 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 				String controllerPort;
 				int tempo;
 				String answer;
-				WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-				if(wifi.isWifiEnabled() == false){
+				WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+				if(!wifi.isWifiEnabled()){
 					DebugLog.d(TAG, "No Wi-Fi connection!");
 					return;
 				}
@@ -236,8 +210,13 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 						lastSentSong.setInGuitar(false);
 					}
 
-					if(lastSelectedSong.isInGuitar() == false){
-						(new Parser(lastSelectedSong,tempo)).sendToGuitar(MainActivity.this, controllerIP, controllerPort, interactive_modeCheckBox.isChecked());
+					if(!lastSelectedSong.isInGuitar()){
+
+						Python py = Python.getInstance();
+						String parsedSong = py.getModule("myParser").callAttr("parse", "m a d e -  w i t h - p y t h o n").toJava(String.class);
+
+
+						(new Parser(lastSelectedSong, tempo)).sendToGuitar(MainActivity.this, controllerIP, controllerPort, interactive_modeCheckBox.isChecked());
 						// Data sent. Here we assume data is always sent successfully and confirmed by guitar controller
 						lastSelectedSong.setInGuitar(true);
 						DebugLog.d(TAG, "Song data sent.");
@@ -269,7 +248,9 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 
 									while(fix_tries > 0){
 										try{
-											clientSocketRecv.close();
+											if (clientSocketRecv != null) {
+												clientSocketRecv.close();
+											}
 											clientSocketRecv = new DatagramSocket(idle_port);
 											receivePacket = new DatagramPacket(receiveData, receiveData.length);
 											clientSocketRecv.setSoTimeout(TIMEOUT);
@@ -339,8 +320,6 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 				}else{
 					(new SendInstruction()).execute("UDP", controllerIP, controllerPort, "PAUSE");
 					DebugLog.d(TAG, "Pause instruction sent.");
-
-
 				}
 
 
@@ -370,9 +349,6 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 
 				spinner.setEnabled(true);
 				playPauseButton.setChecked(false);
-
-				return;
-
 			}
 		});
 

@@ -17,7 +17,7 @@ import javax.net.ssl.HttpsURLConnection;
  */
 
 class DownloadFileAsyncTask extends AsyncTask<String, Void, Object[]>{
-	private String TAG = "myFilter";
+	private static final String TAG = "myFilter";
 	private Context myContext;
 	private OnDoneListener listener;
 

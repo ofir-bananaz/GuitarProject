@@ -83,6 +83,14 @@ public class Parser{
 		}
 		tabs_six_lines = list.toArray(new String[0]);
 
+		for(int offset = 0; offset < Array.getLength(this.tabs_six_lines); offset += 6){
+			this.parse_six_lines(offset);
+		}
+
+		this.add_strings();
+		this.reverse_all_strings();
+		this.shift_left_all();
+
 	}
 
 	private String[] joinInterleav(String[] s1, String[] s2){
@@ -570,16 +578,9 @@ public class Parser{
 
 		DebugLog.d("myFilter", "Generating data...");
 		// This for loop should be in a different thread!
-		for(int offset = 0; offset < Array.getLength(this.tabs_six_lines); offset += 6){
-			this.parse_six_lines(offset);
-		}
 
-		this.add_strings();
-		this.reverse_all_strings();
-		this.shift_left_all();
 		DebugLog.d("myFilter", "Sending data to controller...");
-		return   this.sendDataToController(mainActivity,"UDP", controllerIP, controllerPort, interactive_mode);
-
+		return this.sendDataToController(mainActivity,"UDP", controllerIP, controllerPort, interactive_mode);
 
 	}
 }
