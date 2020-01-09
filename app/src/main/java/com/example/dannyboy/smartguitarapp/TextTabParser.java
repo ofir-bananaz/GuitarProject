@@ -1,6 +1,5 @@
 package com.example.dannyboy.smartguitarapp;
 
-import android.app.Activity;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -131,10 +130,11 @@ public class TextTabParser implements ControllerSongParser {
 
 
 	public void parse_column_array(List<String> column_array){
-		List<LookupArrayElement> LookupArray = new ArrayList<LookupArrayElement>();
+		// That's ho they lamely initiated the array on the second project
+		List<LookupArrayElement> lookupArray = new ArrayList<LookupArrayElement>();
 
 		for(int i = 0; i < 6; i++){
-			LookupArray.add(new LookupArrayElement());
+			lookupArray.add(new LookupArrayElement());
 		}
 
 		for(int sec = 0; sec < column_array.size(); sec++){
@@ -142,7 +142,7 @@ public class TextTabParser implements ControllerSongParser {
 			Second newSec = new Second();
 			//Parse second line after line
 			for(int string = 0; string < 6; string++){
-				String curChar = new String(column_array.get(sec).substring(string, string + 1));
+				String curChar = column_array.get(sec).substring(string, string + 1);
 				//This string is empty (should not be played, hence -)
 				if(curChar.equals("-"))
 					continue;
@@ -151,12 +151,12 @@ public class TextTabParser implements ControllerSongParser {
 				if(curChar.matches(".*\\d.*") || curChar.matches(".*[A-Z].*")){//Check if this string is a number
 					int fret = Integer.parseInt(curChar, RADIX);
 					//Hammer On
-					if(LookupArray.get(string).getType().equals("ho")){
-						//	handle_hammer_on(LookupArray, newSec);
+					if(lookupArray.get(string).getType().equals("ho")){
+						//	handle_hammer_on(lookupArray, newSec);
 
 						//Remove extra space
-						for(Dot dot : LookupArray.get(string).getDotList()){
-							time_list.get(time_list.size() - 2).removeDot(dot);
+						for(Dot dot : lookupArray.get(string).getDotList()){
+							time_list.get(time_list.size() - 2).removeDot(dot); // remove h from text
 							time_list.get(time_list.size() - 1).addDot(dot);
 						}
 						//Add "prepare for hammer on" dot 1 sec before
@@ -164,20 +164,20 @@ public class TextTabParser implements ControllerSongParser {
 						time_list.get(time_list.size() - 1).addDot(prepareDot);
 
 						//Add the last dot plus "play hammer on" dot to current second
-						for(Dot dot : LookupArray.get(string).getDotList()){
+						for(Dot dot : lookupArray.get(string).getDotList()){
 							newSec.addDot(dot);
 						}
 
 						Dot playDot = new Dot(fret, string, "green");
 						newSec.addDot(playDot);
-						LookupArray.get(string).setType("none");
+						lookupArray.get(string).setType("none");
 						continue;
 					}
 					//Pull Off
-					if(LookupArray.get(string).getType().equals("po")){
+					if(lookupArray.get(string).getType().equals("po")){
 
 						//Remove extra space
-						for(Dot dot : LookupArray.get(string).getDotList())
+						for(Dot dot : lookupArray.get(string).getDotList())
 							time_list.get(time_list.size() - 1).addDot(dot);
 						//Add "prepare for hammer on" dot 1 sec before
 						Dot newDot = new Dot(fret, string, "blue");
@@ -185,27 +185,27 @@ public class TextTabParser implements ControllerSongParser {
 
 						//Add the last dot plus "play hammer on" dot to current second
 						newSec.addDot(newDot);
-						LookupArray.get(string).setType("none");
+						lookupArray.get(string).setType("none");
 						continue;
 					}
 					//Slide Up
-					if(LookupArray.get(string).getType().equals("su")){
+					if(lookupArray.get(string).getType().equals("su")){
 						Dot newDot = new Dot(fret, string, "blue");
-						int start_fret = LookupArray.get(string).getDotList().get(0).get_fret();
+						int start_fret = lookupArray.get(string).getDotList().get(0).get_fret();
 						Dot startDot = new Dot(start_fret, string, "blue");
 						time_list.get(time_list.size() - 2).removeDot(newDot);
 						time_list.get(time_list.size() - 1).addDot(newDot);
 						light_from_to(start_fret + 1, fret, string, "purple", time_list.get(time_list.size() - 1));
 						light_from_to(start_fret + 1, fret, string, "purple", newSec);
 						newSec.addDot(newDot);
-						LookupArray.get(string).setType("none");
+						lookupArray.get(string).setType("none");
 						continue;
 					}
 					//Slide Down
-					if(LookupArray.get(string).getType().equals("sd")){
+					if(lookupArray.get(string).getType().equals("sd")){
 						Dot newDot = new Dot(fret, string, "blue");
 						int next_fret = fret;
-						int start_fret = LookupArray.get(string).getDotList().get(0).get_fret();
+						int start_fret = lookupArray.get(string).getDotList().get(0).get_fret();
 						Dot startDot = new Dot(start_fret, string, "blue");
 						time_list.get(time_list.size() - 2).removeDot(newDot);
 						time_list.get(time_list.size() - 1).addDot(newDot);
@@ -214,15 +214,15 @@ public class TextTabParser implements ControllerSongParser {
 						light_from_to(next_fret, start_fret, string, "purple", time_list.get(time_list.size() - 1));
 						light_from_to(next_fret, start_fret, string, "purple", newSec);
 						newSec.addDot(newDot);
-						LookupArray.get(string).setType("none");
+						lookupArray.get(string).setType("none");
 						continue;
 					}
 					//Bend
-					if(LookupArray.get(string).getType().equals("b")){
-						for(Dot dot : LookupArray.get(string).getDotList()){
+					if(lookupArray.get(string).getType().equals("b")){
+						for(Dot dot : lookupArray.get(string).getDotList()){
 							time_list.get(time_list.size() - 2).removeDot(dot);
 						}
-						int upper_fret = LookupArray.get(string).getDotList().get(0).get_fret();
+						int upper_fret = lookupArray.get(string).getDotList().get(0).get_fret();
 						int upper_string = string;
 						if(upper_string == 0)
 							upper_string = 1;
@@ -230,13 +230,13 @@ public class TextTabParser implements ControllerSongParser {
 							upper_string--;
 						Dot upper_dot = new Dot(upper_fret, upper_string, "purple");
 						newSec.addDot(upper_dot);
-						for(Dot dot : LookupArray.get(string).getDotList())
+						for(Dot dot : lookupArray.get(string).getDotList())
 							newSec.addDot(dot);
-						LookupArray.get(string).setType("none");
+						lookupArray.get(string).setType("none");
 						continue;
 					}
 					//Release
-					if(LookupArray.get(string).getType().equals("r")){
+					if(lookupArray.get(string).getType().equals("r")){
 						int upper_string = string;
 						if(upper_string == 0)
 							upper_string = 1;
@@ -251,25 +251,25 @@ public class TextTabParser implements ControllerSongParser {
 						continue;
 					}
 					//Vibrato
-					if(LookupArray.get(string).getType().equals("v")){
-						for(Dot dot : LookupArray.get(string).getDotList()){
+					if(lookupArray.get(string).getType().equals("v")){
+						for(Dot dot : lookupArray.get(string).getDotList()){
 							time_list.get(time_list.size() - 2).removeDot(dot);
 						}
-						int newFret = LookupArray.get(string).getDotList().get(0).get_fret();
+						int newFret = lookupArray.get(string).getDotList().get(0).get_fret();
 
 						Dot dot = new Dot(newFret, string, "green");
 						newSec.addDot(dot);
 						continue;
 					}
 					//Ghost note
-					if(LookupArray.get(string).getType().equals("gn")){
+					if(lookupArray.get(string).getType().equals("gn")){
 						Dot dot = new Dot(fret, string, "red");
 						newSec.addDot(dot);
-						LookupArray.get(string).setType("none");
+						lookupArray.get(string).setType("none");
 						continue;
 					}
 
-					if(LookupArray.get(string).getType().equals("none")){
+					if(lookupArray.get(string).getType().equals("none")){
 						Dot dot = new Dot(fret, string, "blue");
 						//dots.add(dot);
 						newSec.myDots.add(dot);
@@ -279,61 +279,61 @@ public class TextTabParser implements ControllerSongParser {
 
 				//Slide up
 				if(curChar.equals("/")){
-					LookupArray.get(string).setType("su");
+					lookupArray.get(string).setType("su");
 					int start_fret = 1;//TODO change to 1 according to the actual fret array
 					String chr = column_array.get(sec - 1).substring(string, string + 1);
 					if(chr.matches(".*\\d+.*") && column_array.size() > 2)//TODO: figure out why greater than 2
 						start_fret = Integer.parseInt(chr, RADIX);
-					LookupArray.get(string).insertDot(new Dot(start_fret, string, "purple"));
+					lookupArray.get(string).insertDot(new Dot(start_fret, string, "purple"));
 					continue;
 				} //Slide down
 				if(curChar.equals("\\")){
-					LookupArray.get(string).setType("sd");
+					lookupArray.get(string).setType("sd");
 					int start_fret = 0;//TODO change to 1 according to the actual fret array
 					String chr = column_array.get(sec - 1).substring(string, string + 1);
 					if(chr.matches(".*\\d+.*") && column_array.size() > 2)//TODO: figure out why greater than 2
 						start_fret = Integer.parseInt(chr, RADIX);
-					LookupArray.get(string).insertDot(new Dot(start_fret, string, "purple"));
+					lookupArray.get(string).insertDot(new Dot(start_fret, string, "purple"));
 					continue;
 				}
 				//Hammer on
 				if(curChar.equals("h")){
-					LookupArray.get(string).setType("ho");
+					lookupArray.get(string).setType("ho");
 					int prev_fret = getFret(sec - 1, string);
-					LookupArray.get(string).insertDot(new Dot(prev_fret, string, "blue"));
+					lookupArray.get(string).insertDot(new Dot(prev_fret, string, "blue"));
 					continue;
 				}
 				//Pull off
 				if(curChar.equals("p")){
-					LookupArray.get(string).setType("po");
+					lookupArray.get(string).setType("po");
 					int prev_fret = Integer.parseInt(column_array.get(sec - 1).substring(string, string + 1), RADIX);
-					LookupArray.get(string).insertDot(new Dot(prev_fret, string, "purple"));
+					lookupArray.get(string).insertDot(new Dot(prev_fret, string, "purple"));
 					continue;
 				}
 				//Ghost note
 				if(curChar.equals("(")){
-					LookupArray.get(string).setType("gn");
+					lookupArray.get(string).setType("gn");
 					continue;
 				} //Band
 				if(curChar.equals("b") || curChar.equals("^")){
-					LookupArray.get(string).setType("b");
+					lookupArray.get(string).setType("b");
 					int prev_fret = Integer.parseInt(column_array.get(sec - 1).substring(string, string + 1), RADIX);
-					LookupArray.get(string).insertDot(new Dot(prev_fret, string, "blue"));
+					lookupArray.get(string).insertDot(new Dot(prev_fret, string, "blue"));
 					continue;
 				} //Release
 				if(curChar.equals("r")){
-					LookupArray.get(string).setType("r");
+					lookupArray.get(string).setType("r");
 					int prev_fret = Integer.parseInt(column_array.get(sec - 1).substring(string, string + 1), RADIX);
-					LookupArray.get(string).insertDot(new Dot(prev_fret, string, "purple"));
+					lookupArray.get(string).insertDot(new Dot(prev_fret, string, "purple"));
 					continue;
 				}
 				//Vibrato
 				if(curChar.equals("v") || curChar.equals("~")){
-					LookupArray.get(string).setType("b");
+					lookupArray.get(string).setType("b");
 					//int prev_fret=Integer.parseInt( column_array.get(sec-1).substring(string, string+1),RADIX);
 					int prev_fret = getFret(sec - 1, string);
 					Dot newDot = new Dot(prev_fret, string, "green");
-					LookupArray.get(string).insertDot(new Dot(prev_fret, string, "blue"));
+					lookupArray.get(string).insertDot(new Dot(prev_fret, string, "blue"));
 					//Remove this dot from time list, we're gonna insert a fixed version soon?
 					continue;
 				}
@@ -384,7 +384,11 @@ public class TextTabParser implements ControllerSongParser {
 
 	}
 
-	public void add_strings(){
+	/**
+	 * Adds a LED indication on the PCB for the guitar string that should be played (the controller LEDs).
+	 *
+	 */
+	public void add_strings_indication(){
 		for(int i = 0; i < time_list.size(); i++){
 			Second curSecond = time_list.get(i);
 			if(curSecond.isEmpty() || curSecond.isEOM())
@@ -403,6 +407,9 @@ public class TextTabParser implements ControllerSongParser {
 		}
 	}
 
+	/**
+	 * On the second project they probably have shown the strings upside down so this is their fix
+	 */
 	public void reverse_all_strings(){
 		for(Second sec : time_list){
 			if(sec.isEmpty() || sec.isEOM())
@@ -413,6 +420,9 @@ public class TextTabParser implements ControllerSongParser {
 		}
 	}
 
+	/**
+	 * This is indexing fix from the tab to what shown on the guitar
+	 */
 	public void shift_left_all(){
 		for(Second sec : time_list){
 			if(sec.isEmpty() || sec.isEOM())
@@ -474,7 +484,7 @@ public class TextTabParser implements ControllerSongParser {
 	}
 
 
-	public String getControllerString(Song song, int tempo, boolean isInteractiveMode) {
+	public String getControllerString(Song song, int controllerTime, boolean isInteractiveMode) {
 		List<String> lines;
 		try{
 			lines = changeFretNumRadix(song.getAbsolutePath());
@@ -483,8 +493,8 @@ public class TextTabParser implements ControllerSongParser {
 			throw new IllegalArgumentException("Invalid song Path from device");
 		}
 
-		if(tempo>0){
-			tempoDefault = tempo;
+		if(controllerTime >0){
+			tempoDefault = controllerTime;
 		}
 
 		List<String> list = new ArrayList<String>();
@@ -503,7 +513,7 @@ public class TextTabParser implements ControllerSongParser {
 		}
 
 		DebugLog.d("myFilter", "Generating data...");
-		this.add_strings();
+		this.add_strings_indication();
 		this.reverse_all_strings();
 		this.shift_left_all();
 		this.generateNonBinDataString();

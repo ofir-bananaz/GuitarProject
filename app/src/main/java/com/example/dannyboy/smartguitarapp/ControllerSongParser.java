@@ -16,6 +16,6 @@ public interface ControllerSongParser {
     int TCP = 0;
     int UDP = 1;
 
-    public String getControllerString(Song song, int tempo, boolean isInteractiveMode);
+    public String getControllerString(Song song, int controllerTime, boolean isInteractiveMode);
 
 }

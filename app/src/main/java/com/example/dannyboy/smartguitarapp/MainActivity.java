@@ -49,7 +49,9 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 	private PromptDialog promptDialog;
 
 	private ControllerSongLoader controllerSongLoader = new ControllerSongLoader(MainActivity.this); // Use as a singleton
-
+	private String controllerIP;
+	private String controllerPort;
+	private int controllerTime;
 
 	private void requestPermissions() {
         if(ContextCompat.checkSelfPermission(this,
@@ -63,6 +65,37 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
             }
         }
     }
+
+	/**
+	 * Updates the application parameters by the text field in the application that were filled by the user
+	 */
+	private void updateVariablesFromTextBoxes() {
+		WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+		if(!wifi.isWifiEnabled()){
+			DebugLog.d(TAG, "No Wi-Fi connection!");
+			return;
+		}
+		if(ipEditText.getText().toString().matches("")){
+			controllerIP = ipEditText.getHint().toString();//"192.168.2.100";
+		}else{
+			controllerIP = ipEditText.getText().toString();
+		}
+		if(portEditText.getText().toString().matches("")){
+			controllerPort = portEditText.getHint().toString();//"10080";
+		}else{
+			controllerPort = portEditText.getText().toString();
+		}
+		// The (256-controllerTime) was defined in the project 1st iteration. See how the controller translates this to keep the LEDs on to understand this better.
+		if(tempoEditText.getText().toString().matches("")){
+			controllerTime = 256-Integer.parseInt( tempoEditText.getHint().toString());
+		}else{
+			controllerTime = 256-Integer.parseInt( tempoEditText.getText().toString());
+			if (controllerTime <= 0) {
+				DebugLog.d(TAG, "Tempo cannot be bigger than 256, setting controllerTime to 127");
+				controllerTime = 127;
+			}
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -133,31 +166,14 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 		});
 		send_button.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
-				String serverAnswer = "null";
-				String controllerIP;
-				String controllerPort;
-				int tempo;
-				if(ipEditText.getText().toString().matches("")){
-					controllerIP = ipEditText.getHint().toString();//"192.168.2.100";
-				}else{
-					controllerIP = ipEditText.getText().toString();
-				}
-				if(portEditText.getText().toString().matches("")){
-					controllerPort = portEditText.getHint().toString();//"10080";
-				}else{
-					controllerPort = portEditText.getText().toString();
-				}
-				if(tempoEditText.getText().toString().matches("")){
-					tempo = Integer.parseInt( tempoEditText.getHint().toString());
-				}else{
-					tempo = Integer.parseInt( tempoEditText.getText().toString());
-				}
+				String serverAnswer;
+				updateVariablesFromTextBoxes();
 
 				MediaPlayer error = MediaPlayer.create(MainActivity.this, R.raw.error);
 				MediaPlayer success = MediaPlayer.create(MainActivity.this, R.raw.success);
 
 				try{
-					String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), tempo);
+					String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime);
 					serverAnswer = controllerSongLoader.load(preparedSong, controllerIP, controllerPort);
 				}catch(Exception e){
 					error.start();
@@ -178,31 +194,9 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 
 		playPauseButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
-				String controllerIP;
-				String controllerPort;
-				int tempo;
 				String answer;
-				WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-				if(!wifi.isWifiEnabled()){
-					DebugLog.d(TAG, "No Wi-Fi connection!");
-					return;
-				}
-				if(ipEditText.getText().toString().matches("")){
-					controllerIP = ipEditText.getHint().toString();//"192.168.2.101";
-				}else{
-					controllerIP = ipEditText.getText().toString();
+				updateVariablesFromTextBoxes();
 
-				}
-				if(portEditText.getText().toString().matches("")){
-					controllerPort = portEditText.getHint().toString();//"10080";
-				}else{
-					controllerPort = portEditText.getText().toString();
-				}
-				if(tempoEditText.getText().toString().matches("")){
-					tempo = 256-Integer.parseInt( tempoEditText.getHint().toString());
-				}else{
-					tempo = 256-Integer.parseInt( tempoEditText.getText().toString());
-				}
 				if(playPauseButton.isChecked()){
 
 					//TODO: Improve Send to controller
@@ -211,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 					}
 
 					if(!lastSelectedSong.isInGuitar()){
-						String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), tempo);
+						String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime);
 						controllerSongLoader.load(preparedSong, controllerIP, controllerPort);
 
 						DebugLog.d(TAG, "Song data sent.");
@@ -298,10 +292,6 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 							}
 						}).start();
 
-
-						//
-
-
 					}else{
 						(new SendInstruction()).execute("UDP", controllerIP, controllerPort, "PLAY");
 						DebugLog.d(TAG, "Play instruction sent.");
@@ -320,28 +310,17 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 		});
 		stop_button.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
-				String controllerIP;
-				String controllerPort;
-				if(ipEditText.getText().toString().matches("")){
-					controllerIP = ipEditText.getHint().toString();//"192.168.2.101";
-				}else{
-					controllerIP = ipEditText.getText().toString();
-				}
-				if(portEditText.getText().toString().matches("")){
-					controllerPort = portEditText.getHint().toString();//"10080";
-				}else{
-					controllerPort = portEditText.getText().toString();
-				}
-				lastSentSong = lastSelectedSong;
-				lastSentSong.setInGuitar(false);
-				//TODO: Improve Send stop to controller
-				(new SendInstruction()).execute("UDP", controllerIP, controllerPort, "STOP");
-				DebugLog.d(TAG, "Stop instruction sent.");
-				stop_button.setEnabled(false);
-				send_button.setEnabled(true);
+			updateVariablesFromTextBoxes();
+			lastSentSong = lastSelectedSong;
+			lastSentSong.setInGuitar(false);
+			//TODO: Improve Send stop to controller
+			(new SendInstruction()).execute("UDP", controllerIP, controllerPort, "STOP");
+			DebugLog.d(TAG, "Stop instruction sent.");
+			stop_button.setEnabled(false);
+			send_button.setEnabled(true);
 
-				spinner.setEnabled(true);
-				playPauseButton.setChecked(false);
+			spinner.setEnabled(true);
+			playPauseButton.setChecked(false);
 			}
 		});
 

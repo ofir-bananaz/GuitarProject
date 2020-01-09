@@ -14,7 +14,7 @@ class GuitarProParser implements ControllerSongParser{
 
 
     @Override
-    public String getControllerString(Song song, int tempo, boolean isInteractiveMode) {
+    public String getControllerString(Song song, int controllerTime, boolean isInteractiveMode) {
         Python py = Python.getInstance();
         String parsedSong = py.getModule("myParser").callAttr("parse", "m a d e -  w i t h - p y t h o n").toJava(String.class);
         DebugLog.d("", "Not implemented yet - but the following string is " + parsedSong);
