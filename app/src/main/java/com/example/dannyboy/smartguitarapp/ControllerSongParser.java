@@ -1,8 +1,14 @@
 package com.example.dannyboy.smartguitarapp;
 
+import com.google.common.collect.ImmutableMap;
+
+import java.util.List;
+import java.util.Map;
+
 public interface ControllerSongParser {
 
     int LAST_FRET = 8;//last_fret in their code
+    int _VID = 87;
     int _PRP = 86;
     int _EOM = 85;
     int _HLD = 84;
@@ -16,6 +22,23 @@ public interface ControllerSongParser {
     int TCP = 0;
     int UDP = 1;
 
-    public String getControllerString(Song song, int controllerTime, boolean isInteractiveMode);
+    Map<String, Integer> controllerUsedColors = ImmutableMap.of(
+            "purple", _PRP,
+            "red", _RDD,
+            "green", _GRN,
+            "blue", _BLU);
+
+    String getControllerStreamInner(Song song, int controllerTime, int trackIndex);
+
+    default String getControllerStream(Song song, int controllerTime, boolean isInteractiveMode, int trackIndex) {
+        String controllerStreamWithoutInteractive = getControllerStreamInner(song, controllerTime, trackIndex);
+        if(!isInteractiveMode){
+            return ((char) _NON_INTER) + controllerStreamWithoutInteractive;
+        }else{
+            return ((char) _INTER) + controllerStreamWithoutInteractive;
+        }
+    }
+
+    List<String> getTrackNames(Song song);
 
 }

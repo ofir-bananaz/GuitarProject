@@ -11,9 +11,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
 
 public class TextTabParser implements ControllerSongParser {
 
@@ -28,17 +26,13 @@ public class TextTabParser implements ControllerSongParser {
 	private static int tempoDefault = 127;//last_fret in their code
 
 	private static final int RADIX = 22 + 1;
-	private static final Map<String, Integer> dictT = ImmutableMap.of("purple", _PRP,
-			"red", _RDD,
-			"green", _GRN,
-			"blue", _BLU);
-
 
 	private String bitString;
 	public String[] tabs_six_lines;
 	public List<Second> time_list = new ArrayList<Second>();
 	//public Second[] time_list;
-	private List<String> column_array = new ArrayList<String>();//FIXME is it ok putting it here
+    // This one contains the whole macro (a list coloums that defines an event like hammer, slide, normal events)
+	private List<String> macro_column_array = new ArrayList<String>();//FIXME is it ok putting it here
 	// TODO Deal with argument as path, non relevent text in file, multiple lines
 
 	private String[] joinInterleave(String[] s1, String[] s2){
@@ -330,7 +324,7 @@ public class TextTabParser implements ControllerSongParser {
 				//Vibrato
 				if(curChar.equals("v") || curChar.equals("~")){
 					lookupArray.get(string).setType("b");
-					//int prev_fret=Integer.parseInt( column_array.get(sec-1).substring(string, string+1),RADIX);
+					//int prev_fret=Integer.parseInt( macro_column_array.get(sec-1).substring(string, string+1),RADIX);
 					int prev_fret = getFret(sec - 1, string);
 					Dot newDot = new Dot(prev_fret, string, "green");
 					lookupArray.get(string).insertDot(new Dot(prev_fret, string, "blue"));
@@ -346,7 +340,7 @@ public class TextTabParser implements ControllerSongParser {
 	}
 
 	int getFret(int time, int stringNumber){
-		return Integer.parseInt(column_array.get(time).substring(stringNumber, stringNumber + 1));
+		return Integer.parseInt(macro_column_array.get(time).substring(stringNumber, stringNumber + 1));
 	}
 
 	public void parse_six_lines(int offset){
@@ -361,15 +355,15 @@ public class TextTabParser implements ControllerSongParser {
 			if(column.toString().equals("||||||"))
 				continue;
 			if(column.toString().equals("------")){// Detect new macro
-				if(column_array.isEmpty()){
+				if(macro_column_array.isEmpty()){
 
 					Second emptySecond = new Second();
 					time_list.add(emptySecond);
-					// column_array.clear(); TODO: check if needed.
+					// macro_column_array.clear(); TODO: check if needed.
 					continue;
 				}else{
-					parse_column_array(column_array); // Add all of the macros seconds
-					column_array.clear();
+					parse_column_array(macro_column_array); // Add all of the macros seconds
+					macro_column_array.clear();
 					Second eomSec = new Second();
 					eomSec.setEom(true);
 					time_list.add(eomSec);
@@ -378,7 +372,7 @@ public class TextTabParser implements ControllerSongParser {
 				}
 
 			}else
-				column_array.add(column.toString());
+				macro_column_array.add(column.toString());
 
 		}
 
@@ -455,8 +449,8 @@ public class TextTabParser implements ControllerSongParser {
 			} else {
 				for(int j = 0; j < curSecond.myDots.size(); j++) {
 					Dot curDot = curSecond.myDots.get(j);
-					if (dictT.containsKey(curDot.get_color())) {
-						sent_stringBuilder.append((char) ((int) dictT.get(curDot.get_color())));
+					if (controllerUsedColors.containsKey(curDot.get_color())) {
+						sent_stringBuilder.append((char) ((int) controllerUsedColors.get(curDot.get_color())));
 					} else {
 						throw new RuntimeException("Color does not exist");
 					}
@@ -483,8 +477,8 @@ public class TextTabParser implements ControllerSongParser {
 
 	}
 
-
-	public String getControllerString(Song song, int controllerTime, boolean isInteractiveMode) {
+	@Override
+	public String getControllerStreamInner(Song song, int controllerTime, int trackIndex) {
 		List<String> lines;
 		try{
 			lines = changeFretNumRadix(song.getAbsolutePath());
@@ -518,12 +512,13 @@ public class TextTabParser implements ControllerSongParser {
 		this.shift_left_all();
 		this.generateNonBinDataString();
 
-
-		if(!isInteractiveMode){
-			return ((char) _NON_INTER) + bitString;
-		}else{
-			return ((char) _INTER) + bitString;
-		}
+		return bitString;
 	}
 
+
+	@Override
+	public List<String> getTrackNames(Song song) {
+		DebugLog.e(TAG,"CRITICAL ERROR: trackName is not available in TextTabParser");
+		return null;
+	}
 }

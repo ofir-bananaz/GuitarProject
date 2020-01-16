@@ -29,7 +29,7 @@ import java.net.DatagramSocket;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements OnDoneListener{
+public class MainActivity extends AppCompatActivity implements OnDoneListener {
 
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 1001;
     private static String songsFolderName = "SmartGuitar";
@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 				MediaPlayer success = MediaPlayer.create(MainActivity.this, R.raw.success);
 
 				try{
-					String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime);
+					String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, 0); // TODO - add a edit box with the track index to use
 					serverAnswer = controllerSongLoader.load(preparedSong, controllerIP, controllerPort);
 				}catch(Exception e){
 					error.start();
@@ -205,7 +205,10 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener{
 					}
 
 					if(!lastSelectedSong.isInGuitar()){
-						String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime);
+						DebugLog.d(TAG, "Preparing Song data....");
+
+						String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, 0);  // TODO - add a edit box with the track index to use
+						DebugLog.d(TAG, "Sending Song data....");
 						controllerSongLoader.load(preparedSong, controllerIP, controllerPort);
 
 						DebugLog.d(TAG, "Song data sent.");

@@ -66,7 +66,8 @@
                             android:textAlignment="textStart"
                             android:textColor="@android:color/black"
                             tools:layout_editor_absoluteX="16dp"
-                            tools:layout_editor_absoluteY="35dp" />
+                            tools:layout_editor_absoluteY="35dp"
+                            android:gravity="start" />
 
                         <EditText
                             android:id="@+id/ipEditText"
@@ -162,7 +163,8 @@
                     android:typeface="monospace"
                     tools:layout_editor_absoluteX="187dp"
                     tools:layout_editor_absoluteY="336dp"
-                    tools:ignore="SmallSp" />
+                    tools:ignore="SmallSp"
+                    android:gravity="start" />
             </LinearLayout>
 
         </LinearLayout>
@@ -193,7 +195,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/spinner"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:gravity="start" />
 
                 <Spinner
                     android:id="@+id/spinner"
@@ -203,7 +206,8 @@
                     android:layout_marginTop="8dp"
                     android:layout_weight="1"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginRight="8dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -271,7 +275,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/tempo"
-                            android:textAlignment="textEnd" />
+                            android:textAlignment="textEnd"
+                            android:gravity="end" />
 
                         <EditText
                             android:id="@+id/tempoEditText"

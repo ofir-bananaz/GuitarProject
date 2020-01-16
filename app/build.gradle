@@ -24,7 +24,7 @@ android {
             buildPython "C:/Users/ofiri/Anaconda3/envs/GuitarArmaniProject/python.exe"
 
             pip {
-                install "pyguitarpro"
+                install "PyGuitarPro==0.5"
             }
 
             pyc {
@@ -61,6 +61,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
 }
 
