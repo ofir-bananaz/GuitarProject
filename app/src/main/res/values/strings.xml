@@ -14,6 +14,7 @@
     <string name="verify">Verify</string>
     <string name="debuglog_output">DebugLog output:</string>
     <string name="song">Song:</string>
+    <string name="track">Track:</string>
     <string name="togglebutton">ToggleButton</string>
     <string name="play">Play</string>
     <string name="pause">Pause</string>

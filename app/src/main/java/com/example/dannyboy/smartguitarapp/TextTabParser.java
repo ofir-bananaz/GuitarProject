@@ -3,6 +3,8 @@ package com.example.dannyboy.smartguitarapp;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.common.collect.ImmutableList;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -517,8 +519,8 @@ public class TextTabParser implements ControllerSongParser {
 
 
 	@Override
-	public List<String> getTrackNames(Song song) {
+	public List<SongTrack> getTrackNames(Song song) {
 		DebugLog.e(TAG,"CRITICAL ERROR: trackName is not available in TextTabParser");
-		return null;
+		return ImmutableList.of(SongTrack.builder().name("Text tabs has no tracks").index(0).build());
 	}
 }

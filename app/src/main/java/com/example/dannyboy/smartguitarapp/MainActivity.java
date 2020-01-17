@@ -28,6 +28,7 @@ import java.io.File;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements OnDoneListener {
@@ -47,14 +48,17 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 	private EditText tempoEditText;
 	private TextView debugView;
 	private Spinner spinner;
+	private Spinner guitarProTracksSpinner;
+	private SongTrack selectedTrack;
 	private PromptDialog promptDialog;
 
 	private ControllerSongLoader controllerSongLoader = new ControllerSongLoader(MainActivity.this); // Use as a singleton
 	private String controllerIP;
 	private String controllerPort;
 	private int controllerTime;
+    private List<SongTrack> lastSelectedSongTracksList = new ArrayList<>();
 
-	private void requestPermissions() {
+    private void requestPermissions() {
         if(ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
             //ask for permission
@@ -116,10 +120,12 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 		debugView = findViewById(R.id.debugView);
 		debugView.setMaxLines(Integer.MAX_VALUE);
 		spinner = findViewById(R.id.spinner);
+		guitarProTracksSpinner = findViewById(R.id.tracksSpinner);
 		debugView.setMovementMethod(new ScrollingMovementMethod());
 		new DebugLog(true, debugView);
 		promptDialog = new PromptDialog(MainActivity.this);
 		initiateSongsList();
+		initiateTracksList();
 		//		fillSpinner();
 		send_button.setEnabled(false);
 		playPauseButton.setEnabled(false);
@@ -157,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 					Log.d(TAG, "Spinner initiation failed!");
 					e.printStackTrace();
 				}
+
+				updateTracks();
 			}
 
 			@Override
@@ -166,6 +174,31 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 			}
 
 		});
+
+		ArrayAdapter<SongTrack> tracksAdapter = new ArrayAdapter<SongTrack>(this, android.R.layout.simple_spinner_dropdown_item, lastSelectedSongTracksList);
+		guitarProTracksSpinner.setAdapter(tracksAdapter);
+
+		guitarProTracksSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+			@Override
+			public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id){
+
+				try{
+					selectedTrack = (SongTrack) parentView.getSelectedItem();//Should check somehow if song is already in the device.
+				}catch(Exception e){
+					Log.d(TAG, "Spinner initiation failed!");
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parentView){
+				Log.d(TAG, "User canceled track selection");//<--Doesn't show on cancellation for some reason
+				Toast.makeText(getApplicationContext(), "User canceled track selection...", Toast.LENGTH_LONG).show();
+			}
+
+		});
+
+
 		send_button.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
 				String serverAnswer;
@@ -175,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 				MediaPlayer success = MediaPlayer.create(MainActivity.this, R.raw.success);
 
 				try{
-					String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, 0); // TODO - add a edit box with the track index to use
+					String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, selectedTrack.getIndex()); // TODO - add a edit box with the track index to use
 					serverAnswer = controllerSongLoader.load(preparedSong, controllerIP, controllerPort);
 				}catch(Exception e){
 					error.start();
@@ -213,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 								Toast.LENGTH_LONG)
 								.show();
 
-						String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, 0);  // TODO - add a edit box with the track index to use
+						String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, selectedTrack.getIndex());  // TODO - add a edit box with the track index to use
 						DebugLog.d(TAG, "Sending Song data....");
 						controllerSongLoader.load(preparedSong, controllerIP, controllerPort);
 
@@ -378,7 +411,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 		}else {
             DebugLog.d(TAG, "Checking for new songs in: " + folder.getAbsolutePath());
 
-            lastSelectedSong = Song.builder().name("<Select Song>").build();
+            lastSelectedSong = Song.builder().name("<Select Song>").onlyText(true).build();
             songArrayList.add(lastSelectedSong);
 
 			for(File file :  folder.listFiles()){
@@ -393,7 +426,17 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 				}
 			}
 		}
-		songArrayList.add(Song.builder().name("Download new song from URL...").build());
+		songArrayList.add(Song.builder().name("Download new song from URL...").onlyText(true).build());
 	}
 
+	private void initiateTracksList(){
+		lastSelectedSongTracksList.add(SongTrack.builder().name("No song selected yet...").index(0).build());
+	}
+
+	private void updateTracks() {
+		if (!lastSelectedSong.getOnlyText()) {
+			ArrayAdapter<SongTrack> tracksAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, lastSelectedSong.getSongTrackList());
+			guitarProTracksSpinner.setAdapter(tracksAdapter);
+		}
+	}
 }

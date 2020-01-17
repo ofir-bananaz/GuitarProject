@@ -6,6 +6,7 @@ import android.support.annotation.RequiresApi;
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -99,9 +100,19 @@ public class GuitarProParser implements ControllerSongParser{
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public List<String> getTrackNames(Song song) {
+    public List<SongTrack> getTrackNames(Song song) {
         PyObject parser = getSongParserObject(song);
+
         List<PyObject> fetch_tracks_names = parser.callAttr("fetch_tracks_names").asList();
-        return fetch_tracks_names.stream().map(x -> x.toJava(String.class)).collect(Collectors.toList());
+        int index = 0;
+        List<SongTrack> tracks = new ArrayList<>();
+        for (PyObject track : fetch_tracks_names) {
+            tracks.add(SongTrack.builder()
+                    .index(index)
+                    .name(track.toJava(String.class)).build());
+            index++;
+
+        }
+        return tracks;
     }
 }

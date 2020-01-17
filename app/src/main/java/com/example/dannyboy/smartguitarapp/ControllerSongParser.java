@@ -39,6 +39,6 @@ public interface ControllerSongParser {
         }
     }
 
-    List<String> getTrackNames(Song song);
+    List<SongTrack> getTrackNames(Song song);
 
 }

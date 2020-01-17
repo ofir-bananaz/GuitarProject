@@ -4,6 +4,8 @@ package com.example.dannyboy.smartguitarapp;
  * Created by SlimPC on 22-Dec-17.
  */
 
+import java.util.List;
+
 import lombok.Builder;
 
 /**
@@ -15,6 +17,18 @@ public class Song {
     private String location;
     private Boolean inGuitar;
     private ControllerSongParser controllerSongParser;
+    private Boolean onlyText;
+
+
+    /**
+     * Checks if this song has already been sent to the guitar controller
+     * @return true - the song has been sent <p> false - otherwise</p>
+     *
+     */
+    public Boolean getOnlyText(){
+        return onlyText;
+    }
+
 
     /**
      * Checks if this song has already been sent to the guitar controller
@@ -38,22 +52,28 @@ public class Song {
 	 * @param name Song file name
 	 * @param location Location on the device
 	 */
-    Song(String name, String location, Boolean inGuitar, ControllerSongParser controllerSongParser){
+    Song(String name, String location, Boolean inGuitar, ControllerSongParser controllerSongParser, Boolean onlyText){
         this.name = name;
         this.location = location;
         this.inGuitar = false;
         this.controllerSongParser = controllerSongParser;
+        if (onlyText == null) {
+            onlyText = false;
+        }
+        this.onlyText = onlyText;
     }
 
 	/**
 	 * Used to get the complete path of a Song
 	 * @return path as a String.
 	 */
-	public String getAbsolutePath(){
-	    return location + "/" + name;
-	}
+    public String getAbsolutePath(){
+        return location + "/" + name;
+    }
 
-
+    public boolean isGuitarProSong(){
+        return name.contains(".gp");
+    }
 	/**
 	 * Used to get a song filename
 	 * @return
@@ -97,4 +117,9 @@ public class Song {
     public String prepareSongForController(boolean isInteractive, int controllerTime, int trackIndex) {
         return controllerSongParser.getControllerStream(this, controllerTime, isInteractive, trackIndex);
     }
+
+    public List<SongTrack> getSongTrackList() {
+        return controllerSongParser.getTrackNames(this);
+    }
+
 }
