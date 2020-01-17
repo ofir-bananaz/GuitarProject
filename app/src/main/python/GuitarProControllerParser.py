@@ -1,6 +1,10 @@
 import guitarpro as gp
 
 NUM_FRETS = 7  # The First fret (controller's LEDs) is save for string indication
+BEND_EFFECT_EVENT_TIME = 4
+HAMMER_EFFECT_EVENT_TIME = 4
+SLIDE_EFFECT_EVENT_TIME = 8
+EFFECT_VID_REPEATS = 3
 
 
 class GuitarProControllerParser:
@@ -54,6 +58,13 @@ class GuitarProControllerParser:
         :return:
         """
         succ_note = self.find_succ_note_for_effect(note, succ_beat)
+        if succ_note is not None:
+            for repeat in range(EFFECT_VID_REPEATS):
+                self.add_dot(note.value, note.string, "blue")
+                self.add_dot(succ_note.value, succ_note.string, "green")
+                self.events.append({"event_type": "vid", "time": HAMMER_EFFECT_EVENT_TIME})
+                self.add_dot(note.value, note.string, "blue")
+                self.events.append({"event_type": "vid", "time": HAMMER_EFFECT_EVENT_TIME})
 
     def add_slide_effect_event(self, note, succ_beat):
         """
@@ -70,9 +81,9 @@ class GuitarProControllerParser:
                 self.add_dot(note.value, note.string, "blue")
                 self.add_dot(succ_note.value, succ_note.string, "green")
                 self.events.append({"event_type": "dot", "fret": value, "guitar_string": note.string, "color": "green"})
-                self.events.append({"event_type": "vid", "time": 8})
+                self.events.append({"event_type": "vid", "time": SLIDE_EFFECT_EVENT_TIME})
 
-    def add_bend_effect_event(self, note, succ_beat):
+    def add_bend_effect_event(self, note):
         """
         add events for hammer-on or pull-off envet in the note
         a legal slide event is when the successive beat has a note on the same string with a greater value
@@ -80,6 +91,20 @@ class GuitarProControllerParser:
         :param succ_beat: the
         :return:
         """
+        print(note)
+        bend_direction = -1 if 3 < note.string else 1  # The direction to show the effect in bend depends on the note string
+        bend_strength = int(note.effect.bend.points[-1].value)
+        if bend_strength > 6:  # Checked with a guitar and a strength bigger than 6 is 2 tones band (impossible to do in real life)
+            pass
+        bend_strength_controller = int((bend_strength / 4) +1)  # Guitar Pro bend strength is between 1-12 (This is a downsample to have a value between 1-3)
+
+        for limit in range(note.string, note.string + bend_strength_controller * bend_direction + bend_direction, bend_direction):
+            print("limit" + str(limit))
+            self.add_dot(note.value, note.string, "blue")
+            for bend_indication_string in range(note.string, limit + bend_direction, bend_direction):
+                print("indication string" + str(bend_indication_string))
+                self.events.append({"event_type": "dot", "fret": 0, "guitar_string": bend_indication_string, "color": "purple"})
+            self.events.append({"event_type": "vid", "time": BEND_EFFECT_EVENT_TIME})
         pass
 
     @staticmethod
