@@ -8,6 +8,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
@@ -58,10 +59,12 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
                 Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
             //ask for permission
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission_group.STORAGE}, READ_EXTERNAL_STORAGE_PERMISSION_CODE);
-                requestPermissions(new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, READ_EXTERNAL_STORAGE_PERMISSION_CODE);
-                requestPermissions(new String[]{Manifest.permission.ACCESS_WIFI_STATE}, READ_EXTERNAL_STORAGE_PERMISSION_CODE);
-                requestPermissions(new String[]{Manifest.permission.INTERNET}, READ_EXTERNAL_STORAGE_PERMISSION_CODE);
+				ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_PERMISSION_CODE);
+				ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_PERMISSION_CODE);
+				ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, READ_EXTERNAL_STORAGE_PERMISSION_CODE);
+				ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_WIFI_STATE}, READ_EXTERNAL_STORAGE_PERMISSION_CODE);
+				ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.INTERNET}, READ_EXTERNAL_STORAGE_PERMISSION_CODE);
+
             }
         }
     }
@@ -100,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
         requestPermissions();
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		interactive_modeCheckBox = findViewById(R.id.checkBox);
@@ -206,6 +208,10 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 
 					if(!lastSelectedSong.isInGuitar()){
 						DebugLog.d(TAG, "Preparing Song data....");
+						Toast.makeText(MainActivity.this,
+								"Preparing Song data....",
+								Toast.LENGTH_LONG)
+								.show();
 
 						String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, 0);  // TODO - add a edit box with the track index to use
 						DebugLog.d(TAG, "Sending Song data....");

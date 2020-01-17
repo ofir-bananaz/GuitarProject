@@ -8,7 +8,7 @@
     <string name="button_send">Send!</string>
     <string name="debug_options">Debug Options</string>
     <string name="server_ip">Server IP:</string>
-    <string name="default_server_ip">192.168.137.204</string>
+    <string name="default_server_ip">192.168.3.105</string>
     <string name="server_port">Server Port:</string>
     <string name="_10080">10080</string>
     <string name="verify">Verify</string>

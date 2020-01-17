@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 public class GuitarProParser implements ControllerSongParser{
     private static final GuitarProParser ourInstance = new GuitarProParser();
+    private static final int NUMBER_OF_GUITAR_STRINGS = 6;
 
     static GuitarProParser getInstance() {
         return ourInstance;
@@ -71,16 +72,17 @@ public class GuitarProParser implements ControllerSongParser{
                     break;
                 case "vid":
                     sent_stringBuilder.append((char) _VID);
-                    time = Objects.requireNonNull(eventMap.get("time")).toInt(); // TODO - change so that real time is used
-                    sent_stringBuilder.append((char) controllerTime);
+                    time = Objects.requireNonNull(eventMap.get("time")).toInt();
+                    sent_stringBuilder.append((char) time);
                     break;
                 case "dot":
                     int fret = Objects.requireNonNull(eventMap.get("fret")).toInt();
-                    int guitarString = Objects.requireNonNull(eventMap.get("guitar_string")).toInt();
+                    int guitarStringReversed = Objects.requireNonNull(eventMap.get("guitar_string")).toInt();
+                    int guitarStringControllerIdx = NUMBER_OF_GUITAR_STRINGS - guitarStringReversed; // reverse all strings as controller was receives everything upside down
                     String color = Objects.requireNonNull(eventMap.get("color")).toJava(String.class);
                     sent_stringBuilder.append((char) ((int) controllerUsedColors.get(color)));
                     sent_stringBuilder.append((char) fret);
-                    sent_stringBuilder.append((char) guitarString);
+                    sent_stringBuilder.append((char) guitarStringControllerIdx);
                     break;
             }
         }
