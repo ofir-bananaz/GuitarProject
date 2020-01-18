@@ -17,7 +17,6 @@ class GuitarProControllerParser:
         self.gp = gp.parse(path)
         self.events = []
         self.measures_start_event_indices = []
-        self.tracks = []
 
     def fetch_tracks_names(self):
         """
@@ -25,7 +24,7 @@ class GuitarProControllerParser:
         Example: [(trackIndex, trackName1), (trackNum2, trackName2), ... ] .
         :return:  the list
         """
-        return list(map(lambda x: str(x.name), self.gp.tracks)) 
+        return list(map(lambda x: str(x.name) if len(x.strings) <= 6 and not x.isPercussionTrack else 'invalid track', self.gp.tracks))
 
 
     def get_measure_start_event_indices(self):
@@ -159,7 +158,7 @@ class GuitarProControllerParser:
         """
         parses a controller string for the given track number.
 
-        :return: the number of events that was are ready to be fetched
+        :return: a list of each measure start event index (that can be used in the PCB controller to iterate between events)
         """
         track = self.gp.tracks[trackNumber]  #
         for measure in track.measures:
@@ -170,6 +169,6 @@ class GuitarProControllerParser:
                 self.add_notes_events(beat)
 
         self.events.append({"event_type": "eom"})
-        return len(self.events)
+        return self.measures_start_event_indices
 
 

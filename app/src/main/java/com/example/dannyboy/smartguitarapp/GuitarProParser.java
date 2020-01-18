@@ -5,11 +5,13 @@ import android.support.annotation.RequiresApi;
 
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
+import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class GuitarProParser implements ControllerSongParser{
     private static final GuitarProParser ourInstance = new GuitarProParser();
@@ -38,23 +40,11 @@ public class GuitarProParser implements ControllerSongParser{
         return ((60/ controllerTime) / 256) * (1/duration);
     }
 
-    public void loadingProgression(double percent) {
-        long iPart = (long) percent;
-        String msg = "Loading song ... " + iPart + "%";
-        DebugLog.d("myFilter", msg);
-    }
-
 
     public String generateControllerSongStream(List<PyObject> events, int controllerTime){
         StringBuilder sent_stringBuilder = new StringBuilder();
 
-        int eventsProgressionCounter = events.size() /8;
-        int i = 0;
         for(PyObject event : events){
-            i++;
-            if ( (i % eventsProgressionCounter) == 0) {
-                loadingProgression((i*100) / events.size());
-            }
 
             Map<PyObject, PyObject> eventMap = event.asMap();
             String eventType = Objects.requireNonNull(eventMap.get("event_type")).toString();
@@ -90,11 +80,11 @@ public class GuitarProParser implements ControllerSongParser{
     }
 
     @Override
-    public String getControllerStreamInner(Song song, int controllerTime, int trackIndex) {
+    public ParsedSong getControllerStreamInner(Song song, int controllerTime, int trackIndex) {
         PyObject parser = getSongParserObject(song);
-        int numberOfEvents = parser.callAttr("parse_to_seconds", trackIndex).toInt();
+        List<PyObject> measuresStartPy = parser.callAttr("parse_to_seconds", trackIndex).asList();
         List<PyObject> events = Objects.requireNonNull(parser.get("events")).asList();
-        return generateControllerSongStream(events, controllerTime);
+        return ParsedSong.builder().parsedString(generateControllerSongStream(events, controllerTime)).measuresStartlist(toIntegerList(measuresStartPy)).build();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -106,12 +96,22 @@ public class GuitarProParser implements ControllerSongParser{
         int index = 0;
         List<SongTrack> tracks = new ArrayList<>();
         for (PyObject track : fetch_tracks_names) {
-            tracks.add(SongTrack.builder()
-                    .index(index)
-                    .name(track.toJava(String.class)).build());
+            if (!track.toJava(String.class).equals("invalid track")) {
+                tracks.add(SongTrack.builder()
+                        .index(index)
+                        .name(track.toJava(String.class)).build());
+            }
             index++;
-
         }
         return tracks;
+    }
+
+
+    public List<Integer> toIntegerList(List<PyObject> measuresStartPy) {
+        List<Integer> result = new ArrayList<>();
+        for (PyObject measure : measuresStartPy) {
+            result.add(measure.toInt());
+        }
+        return result;
     }
 }

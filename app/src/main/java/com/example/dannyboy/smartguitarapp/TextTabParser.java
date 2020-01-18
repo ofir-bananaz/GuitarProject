@@ -480,7 +480,7 @@ public class TextTabParser implements ControllerSongParser {
 	}
 
 	@Override
-	public String getControllerStreamInner(Song song, int controllerTime, int trackIndex) {
+	public ParsedSong getControllerStreamInner(Song song, int controllerTime, int trackIndex) {
 		List<String> lines;
 		try{
 			lines = changeFretNumRadix(song.getAbsolutePath());
@@ -514,7 +514,7 @@ public class TextTabParser implements ControllerSongParser {
 		this.shift_left_all();
 		this.generateNonBinDataString();
 
-		return bitString;
+		return ParsedSong.builder().parsedString(bitString).measuresStartlist(ImmutableList.of(0)).build();
 	}
 
 

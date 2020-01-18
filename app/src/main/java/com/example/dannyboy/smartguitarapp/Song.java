@@ -7,10 +7,12 @@ package com.example.dannyboy.smartguitarapp;
 import java.util.List;
 
 import lombok.Builder;
+import lombok.Getter;
 
 /**
  * Song is a basic object used to keep a song meta-data.
  */
+@Getter
 @Builder
 public class Song {
     private String name;
@@ -18,6 +20,7 @@ public class Song {
     private Boolean inGuitar;
     private ControllerSongParser controllerSongParser;
     private Boolean onlyText;
+    private ParsedSong parsedSong;
 
 
     /**
@@ -52,7 +55,7 @@ public class Song {
 	 * @param name Song file name
 	 * @param location Location on the device
 	 */
-    Song(String name, String location, Boolean inGuitar, ControllerSongParser controllerSongParser, Boolean onlyText){
+    Song(String name, String location, Boolean inGuitar, ControllerSongParser controllerSongParser, Boolean onlyText, ParsedSong parsedSong){
         this.name = name;
         this.location = location;
         this.inGuitar = false;
@@ -61,6 +64,7 @@ public class Song {
             onlyText = false;
         }
         this.onlyText = onlyText;
+        this.parsedSong = parsedSong;
     }
 
 	/**
@@ -114,12 +118,17 @@ public class Song {
         return name.hashCode();
     }
 
-    public String prepareSongForController(boolean isInteractive, int controllerTime, int trackIndex) {
-        return controllerSongParser.getControllerStream(this, controllerTime, isInteractive, trackIndex);
+    public ParsedSong prepareSongForController(boolean isInteractive, int controllerTime, int trackIndex) {
+        this.parsedSong = controllerSongParser.getControllerStream(this, controllerTime, isInteractive, trackIndex);
+        return this.parsedSong;
     }
 
     public List<SongTrack> getSongTrackList() {
         return controllerSongParser.getTrackNames(this);
     }
 
+
+    public Integer getEventIndexForMeasure(int measureNumber) {
+        return this.parsedSong.getMeasuresStartlist().get(measureNumber);
+    }
 }

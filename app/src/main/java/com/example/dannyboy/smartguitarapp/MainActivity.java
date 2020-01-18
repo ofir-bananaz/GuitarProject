@@ -211,8 +211,8 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 				MediaPlayer success = MediaPlayer.create(MainActivity.this, R.raw.success);
 
 				try{
-					String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, selectedTrack.getIndex());
-					serverAnswer = controllerSongLoader.load(preparedSong, controllerIP, controllerPort);
+					ParsedSong parsedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, selectedTrack.getIndex());
+					serverAnswer = controllerSongLoader.load(parsedSong.getParsedString(), controllerIP, controllerPort);
 				}catch(Exception e){
 					error.start();
 					return;
@@ -248,19 +248,15 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 								Toast.LENGTH_LONG)
 								.show();
 
-						String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, selectedTrack.getIndex());
+						ParsedSong parsedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, selectedTrack.getIndex());
 						DebugLog.d(TAG, "Sending Song data....");
-						controllerSongLoader.load(preparedSong, controllerIP, controllerPort);
+						controllerSongLoader.load(parsedSong.getParsedString(), controllerIP, controllerPort);
 
 						DebugLog.d(TAG, "Song data sent.");
 						stopButton.setEnabled(true);
-
 						spinner.setEnabled(false);
 						sendButton.setEnabled(false);
-
-
-						enableLoopButton(127); // TODO - enable with the parameters from the Guitar pro loop
-
+						enableLoopButton(parsedSong.getMeasuresStartlist().size() - 1); // TODO - enable with the parameters from the Guitar pro loop
 						//This is a hacky workaround for a new incoming message event (needs to be replaced with a listener)
 						new Thread(new Runnable(){
 							public void run(){
@@ -386,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 					Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
 					return;
 				}
-				(new SendInstruction()).execute("UDP", controllerIP, controllerPort, prepareLoopInstruction(startBar, endBar)); // TODO - check with Ohad what is the right command to send
+				(new SendInstruction()).execute("UDP", controllerIP, controllerPort, prepareLoopInstruction(lastSelectedSong.getEventIndexForMeasure(startBar), lastSelectedSong.getEventIndexForMeasure(endBar))); // TODO - check with Ohad what is the right command to send
 				DebugLog.d(TAG, "Loop instruction sent.");
 
 			}

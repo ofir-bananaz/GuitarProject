@@ -28,15 +28,13 @@ public interface ControllerSongParser {
             "green", _GRN,
             "blue", _BLU);
 
-    String getControllerStreamInner(Song song, int controllerTime, int trackIndex);
+    ParsedSong getControllerStreamInner(Song song, int controllerTime, int trackIndex);
 
-    default String getControllerStream(Song song, int controllerTime, boolean isInteractiveMode, int trackIndex) {
-        String controllerStreamWithoutInteractive = getControllerStreamInner(song, controllerTime, trackIndex);
-        if(!isInteractiveMode){
-            return ((char) _NON_INTER) + controllerStreamWithoutInteractive;
-        }else{
-            return ((char) _INTER) + controllerStreamWithoutInteractive;
-        }
+    default ParsedSong getControllerStream(Song song, int controllerTime, boolean isInteractiveMode, int trackIndex) {
+        char interactiveChar = !isInteractiveMode ? (char) _NON_INTER : (char) _INTER;
+        ParsedSong controllerStreamInner = getControllerStreamInner(song, controllerTime, trackIndex);
+        String controllerStreamWithoutInteractive = interactiveChar + controllerStreamInner.getParsedString();
+        return  ParsedSong.builder().parsedString(controllerStreamWithoutInteractive).measuresStartlist(controllerStreamInner.getMeasuresStartlist()).build();
     }
 
     List<SongTrack> getTrackNames(Song song);
