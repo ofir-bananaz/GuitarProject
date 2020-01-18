@@ -25,7 +25,7 @@ class GuitarProControllerParser:
         Example: [(trackIndex, trackName1), (trackNum2, trackName2), ... ] .
         :return:  the list
         """
-        return list(map(lambda x: str(x.name), self.gp.tracks))
+        return list(map(lambda x: str(x.name), self.gp.tracks)) 
 
 
     def get_measure_start_event_indices(self):

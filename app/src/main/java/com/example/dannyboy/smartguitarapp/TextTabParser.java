@@ -520,7 +520,6 @@ public class TextTabParser implements ControllerSongParser {
 
 	@Override
 	public List<SongTrack> getTrackNames(Song song) {
-		DebugLog.e(TAG,"CRITICAL ERROR: trackName is not available in TextTabParser");
 		return ImmutableList.of(SongTrack.builder().name("Text tabs has no tracks").index(0).build());
 	}
 }

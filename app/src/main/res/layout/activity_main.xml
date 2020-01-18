@@ -109,7 +109,7 @@
                 </TableLayout>
 
                 <Button
-                    android:id="@+id/send_button"
+                    android:id="@+id/sendButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -248,6 +248,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
+
                     <ToggleButton
                         android:id="@+id/playPauseButton"
                         android:layout_width="match_parent"
@@ -257,6 +258,17 @@
                         android:text="@string/togglebutton"
                         android:textOff="@string/play"
                         android:textOn="@string/pause"
+                        tools:ignore="NestedWeights" />
+
+                    <ToggleButton
+                        android:id="@+id/loopButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@android:color/holo_blue_light"
+                        android:text="@string/togglebutton"
+                        android:textOff="@string/loop"
+                        android:textOn="@string/loop"
                         tools:ignore="NestedWeights" />
 
                     <CheckBox
@@ -279,14 +291,54 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
+
                     <Button
-                        android:id="@+id/stop_button"
+                        android:id="@+id/stopButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@android:color/holo_red_light"
                         android:text="@string/stop"
                         tools:ignore="NestedWeights" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+
+                        <EditText
+                            android:id="@+id/loopStart"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:hint="@string/default_start_bar"
+                            android:inputType="number"
+                            android:textAlignment="center"
+                            android:importantForAutofill="no" />
+
+                        <TextView
+                            android:id="@+id/loopBarTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/to"
+                            android:textAlignment="center"
+                            android:gravity="start" />
+
+                        <EditText
+                            android:id="@+id/loopEnd"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:hint="@string/default_end_bar"
+                            android:inputType="number"
+                            android:textAlignment="center"
+                            android:importantForAutofill="no" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"

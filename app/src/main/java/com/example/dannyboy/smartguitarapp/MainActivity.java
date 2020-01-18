@@ -40,12 +40,14 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 	Song lastSelectedSong = null;
 	Song lastSentSong = null;
 	ArrayList<Song> songArrayList = new ArrayList<>();
-	private Button send_button, stop_button;
+	private Button sendButton, stopButton, loopButton;
 	private ToggleButton playPauseButton;
 	private CheckBox interactive_modeCheckBox;
 	private EditText ipEditText;
 	private EditText portEditText;
 	private EditText tempoEditText;
+	private EditText loopStartBarEditText;
+	private EditText loopEndBarEditText;
 	private TextView debugView;
 	private Spinner spinner;
 	private Spinner guitarProTracksSpinner;
@@ -57,8 +59,9 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 	private String controllerPort;
 	private int controllerTime;
     private List<SongTrack> lastSelectedSongTracksList = new ArrayList<>();
+	private Integer currSongEndBar;
 
-    private void requestPermissions() {
+	private void requestPermissions() {
         if(ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
             //ask for permission
@@ -110,13 +113,15 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		interactive_modeCheckBox = findViewById(R.id.checkBox);
-		send_button = findViewById(R.id.send_button);
+		sendButton = findViewById(R.id.sendButton);
 		playPauseButton = findViewById(R.id.playPauseButton);
-		stop_button = findViewById(R.id.stop_button);
+		stopButton = findViewById(R.id.stopButton);
+		loopButton = findViewById(R.id.loopButton);
 		ipEditText = findViewById(R.id.ipEditText);
 		portEditText = findViewById(R.id.portEditText);
 		tempoEditText = findViewById(R.id.tempoEditText);
-		//		resTextView = findViewById(R.id.txtResult);
+		loopStartBarEditText = findViewById(R.id.loopStart);
+		loopEndBarEditText = findViewById(R.id.loopEnd);
 		debugView = findViewById(R.id.debugView);
 		debugView.setMaxLines(Integer.MAX_VALUE);
 		spinner = findViewById(R.id.spinner);
@@ -126,14 +131,12 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 		promptDialog = new PromptDialog(MainActivity.this);
 		initiateSongsList();
 		initiateTracksList();
-		//		fillSpinner();
-		send_button.setEnabled(false);
+		sendButton.setEnabled(false);
 		playPauseButton.setEnabled(false);
-		stop_button.setEnabled(false);
+		stopButton.setEnabled(false);
+		resetLoopButton();
 		interactive_modeCheckBox.setChecked(false);
 		interactive_modeCheckBox.setEnabled(true);
-
-
 
 
 
@@ -149,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 					lastSelectedSong = (Song) parentView.getSelectedItem();//Should check somehow if song is already in the device.
 					if(!lastSelectedSong.getName().contains("<Select Song>")){
 						DebugLog.d(TAG, "User selected: " + lastSelectedSong.getName());
-						send_button.setEnabled(true);
+						sendButton.setEnabled(true);
 						playPauseButton.setEnabled(true);
 						if(lastSelectedSong.getName().contains("Download new song from URL")){
 							DownloadFileAsyncTask downloadFileAsyncTask;
@@ -199,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 		});
 
 
-		send_button.setOnClickListener(new View.OnClickListener(){
+		sendButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
 				String serverAnswer;
 				updateVariablesFromTextBoxes();
@@ -208,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 				MediaPlayer success = MediaPlayer.create(MainActivity.this, R.raw.success);
 
 				try{
-					String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, selectedTrack.getIndex()); // TODO - add a edit box with the track index to use
+					String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, selectedTrack.getIndex());
 					serverAnswer = controllerSongLoader.load(preparedSong, controllerIP, controllerPort);
 				}catch(Exception e){
 					error.start();
@@ -234,7 +237,6 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 
 				if(playPauseButton.isChecked()){
 
-					//TODO: Improve Send to controller
 					if(lastSentSong != null && !lastSentSong.equals(lastSelectedSong)){
 						lastSentSong.setInGuitar(false);
 					}
@@ -246,15 +248,18 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 								Toast.LENGTH_LONG)
 								.show();
 
-						String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, selectedTrack.getIndex());  // TODO - add a edit box with the track index to use
+						String preparedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, selectedTrack.getIndex());
 						DebugLog.d(TAG, "Sending Song data....");
 						controllerSongLoader.load(preparedSong, controllerIP, controllerPort);
 
 						DebugLog.d(TAG, "Song data sent.");
-						stop_button.setEnabled(true);
+						stopButton.setEnabled(true);
 
 						spinner.setEnabled(false);
-						send_button.setEnabled(false);
+						sendButton.setEnabled(false);
+
+
+						enableLoopButton(127); // TODO - enable with the parameters from the Guitar pro loop
 
 						//This is a hacky workaround for a new incoming message event (needs to be replaced with a listener)
 						new Thread(new Runnable(){
@@ -307,14 +312,14 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 								serverResponse = "IDLE";
 								long difference = System.currentTimeMillis() - startTime;
 
-								stop_button.post(new Runnable(){
+								stopButton.post(new Runnable(){
 									public void run(){
-										stop_button.setEnabled(false);
+										stopButton.setEnabled(false);
 									}
 								});
-								send_button.post(new Runnable(){
+								sendButton.post(new Runnable(){
 									public void run(){
-										send_button.setEnabled(true);
+										sendButton.setEnabled(true);
 									}
 								});
 								spinner.post(new Runnable(){
@@ -337,9 +342,9 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 					}else{
 						(new SendInstruction()).execute("UDP", controllerIP, controllerPort, "PLAY");
 						DebugLog.d(TAG, "Play instruction sent.");
-						stop_button.setEnabled(true);
+						stopButton.setEnabled(true);
 						spinner.setEnabled(false);
-						send_button.setEnabled(false);
+						sendButton.setEnabled(false);
 					}
 
 				}else{
@@ -350,22 +355,42 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 
 			}
 		});
-		stop_button.setOnClickListener(new View.OnClickListener(){
+		stopButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
 			updateVariablesFromTextBoxes();
 			lastSentSong = lastSelectedSong;
 			lastSentSong.setInGuitar(false);
-			//TODO: Improve Send stop to controller
+			(new SendInstruction()).execute("UDP", controllerIP, controllerPort, "~0/0/0"); //disable loop instruction
 			(new SendInstruction()).execute("UDP", controllerIP, controllerPort, "STOP");
 			DebugLog.d(TAG, "Stop instruction sent.");
-			stop_button.setEnabled(false);
-			send_button.setEnabled(true);
-
+			stopButton.setEnabled(false);
+			sendButton.setEnabled(true);
+			resetLoopButton();
 			spinner.setEnabled(true);
 			playPauseButton.setChecked(false);
 			}
 		});
 
+
+		loopButton.setOnClickListener(new View.OnClickListener(){
+			public void onClick(View v){
+				updateVariablesFromTextBoxes();
+				Integer startBar = Integer.parseInt(loopStartBarEditText.getText().toString());
+				Integer endBar = Integer.parseInt(loopEndBarEditText.getText().toString());
+				if (startBar >= currSongEndBar || endBar > currSongEndBar) {
+					Toast.makeText(getApplicationContext(), "Choose Start/End values between song limits (Use value in the hints range)", Toast.LENGTH_LONG).show();
+					return;
+				}
+				if (startBar >= endBar) {
+					String msg = "Illegal values for bar loop! Set values between 0 to " + currSongEndBar + ". Make sure that start < end.";
+					Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+					return;
+				}
+				(new SendInstruction()).execute("UDP", controllerIP, controllerPort, prepareLoopInstruction(startBar, endBar)); // TODO - check with Ohad what is the right command to send
+				DebugLog.d(TAG, "Loop instruction sent.");
+
+			}
+		});
 	}
 
 	public TextView getDebugView(){
@@ -438,5 +463,25 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 			ArrayAdapter<SongTrack> tracksAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, lastSelectedSong.getSongTrackList());
 			guitarProTracksSpinner.setAdapter(tracksAdapter);
 		}
+	}
+
+
+	private void enableLoopButton(Integer endHint) {
+		if (lastSelectedSong.isGuitarProSong()) {
+			currSongEndBar = endHint;
+			loopButton.setEnabled(true);
+			loopEndBarEditText.setHint(endHint.toString());
+		}
+	}
+
+	private void resetLoopButton() {
+		loopButton.setEnabled(false);
+		loopStartBarEditText.setHint(R.string.default_start_bar);
+		loopEndBarEditText.setHint(R.string.default_end_bar);
+	}
+
+
+	private String prepareLoopInstruction(Integer startBar, Integer endBar) {
+		return "~1/" + new StringBuilder(startBar.toString()).reverse().toString() + "/" + new StringBuilder(endBar.toString()).reverse().toString();
 	}
 }
