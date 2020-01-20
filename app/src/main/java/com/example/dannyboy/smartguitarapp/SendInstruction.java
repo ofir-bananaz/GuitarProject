@@ -1,21 +1,11 @@
 package com.example.dannyboy.smartguitarapp;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Set;
 
-import lombok.Builder;
 
 public class SendInstruction extends AsyncTask<String, Void, String>{
 

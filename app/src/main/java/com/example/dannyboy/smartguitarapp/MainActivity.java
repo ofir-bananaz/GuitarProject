@@ -61,6 +61,10 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
     private List<SongTrack> lastSelectedSongTracksList = new ArrayList<>();
 	private Integer currSongEndMeasure;
 
+	TextView textViewState;
+	static final int UdpServerPORT = 4555;
+	UdpServerThread udpServerThread;
+
 	private void requestPermissions() {
         if(ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
@@ -138,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 		interactive_modeCheckBox.setChecked(false);
 		interactive_modeCheckBox.setEnabled(true);
 
+		textViewState = (TextView)findViewById(R.id.state);
 
 
 		// Create an ArrayAdapter using the array list and a default spinner layout
@@ -389,9 +394,22 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 		});
 	}
 
-	public TextView getDebugView(){
-		return debugView;
+	@Override
+	protected void onStart() {
+		udpServerThread = new UdpServerThread(UdpServerPORT, this);
+		udpServerThread.start();
+		super.onStart();
 	}
+
+	@Override
+	protected void onStop() {
+		if(udpServerThread != null){
+			udpServerThread.setRunningToFalse();
+			udpServerThread = null;
+		}
+		super.onStop();
+	}
+
 
 	public void onDone(Object[] result){
 		if(result[0].equals(0)){
@@ -479,5 +497,14 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 
 	private String prepareLoopInstruction(Integer startBar, Integer endBar) {
 		return "~1/" + new StringBuilder(startBar.toString()).reverse().toString() + "/" + new StringBuilder(endBar.toString()).reverse().toString();
+	}
+
+	public void updateState(final String state){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				textViewState.setText(state);
+			}
+		});
 	}
 }

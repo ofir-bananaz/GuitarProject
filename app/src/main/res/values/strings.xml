@@ -26,6 +26,7 @@
     <string name="to">to bar</string>
     <string name="default_measure_start">0</string>
     <string name="default_end_start">0</string>
+    <string name="app_udp_server_is_down">App UDP Server is down</string>
     <string-array name="tab_files">
         <item>simple_ours.txt</item>
         <item>another_file.txt</item>
