@@ -24,100 +24,101 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:id="@+id/serverConfLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TableLayout
+                android:id="@+id/settingsTable"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/txtIP"
+                        android:layout_width="88dp"
+                        android:layout_height="19dp"
+                        android:gravity="start"
+                        android:text="@string/server_ip"
+                        android:textAlignment="textStart"
+                        android:textColor="@android:color/black"
+                        tools:layout_editor_absoluteX="16dp"
+                        tools:layout_editor_absoluteY="35dp" />
+
+                    <EditText
+                        android:id="@+id/ipEditText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:ems="10"
+                        android:fontFamily="monospace"
+                        android:hint="@string/default_server_ip"
+                        android:importantForAutofill="no"
+                        android:inputType="textCapWords|textPersonName"
+                        android:singleLine="false"
+                        android:textSize="12sp"
+                        android:typeface="monospace"
+                        tools:layout_editor_absoluteX="84dp"
+                        tools:layout_editor_absoluteY="31dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                    <TextView
+                        android:id="@+id/txtPort"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/server_port"
+                        android:textColor="@android:color/black"
+                        tools:layout_editor_absoluteX="8dp"
+                        tools:layout_editor_absoluteY="87dp" />
+
+                    <EditText
+                        android:id="@+id/portEditText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:ems="10"
+                        android:fontFamily="monospace"
+                        android:hint="@string/_10080"
+                        android:inputType="textPersonName"
+                        android:textSize="12sp"
+                        android:typeface="monospace"
+                        tools:ignore="Autofill"
+                        tools:layout_editor_absoluteX="90dp"
+                        tools:layout_editor_absoluteY="72dp" />
+                </TableRow>
+
+            </TableLayout>
+
+            <Button
+                android:id="@+id/sendButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:elevation="0dp"
+                android:text="@string/verify"
+                tools:text="Verify" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/debugSettingsLayout"
             android:layout_width="match_parent"
             android:layout_height="158dp"
             android:layout_weight="2"
-            android:background="@drawable/border"
             android:orientation="vertical"
             android:padding="10dip">
 
-            <LinearLayout
-                android:id="@+id/serverConfLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
-                <TableLayout
-                    android:id="@+id/settingsTable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/txtIP"
-                            android:layout_width="88dp"
-                            android:layout_height="19dp"
-                            android:gravity="start"
-                            android:text="@string/server_ip"
-                            android:textAlignment="textStart"
-                            android:textColor="@android:color/black"
-                            tools:layout_editor_absoluteX="16dp"
-                            tools:layout_editor_absoluteY="35dp" />
-
-                        <EditText
-                            android:id="@+id/ipEditText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:background="@null"
-                            android:ems="10"
-                            android:fontFamily="monospace"
-                            android:hint="@string/default_server_ip"
-                            android:importantForAutofill="no"
-                            android:inputType="textCapWords|textPersonName"
-                            android:singleLine="false"
-                            android:textSize="12sp"
-                            android:typeface="monospace"
-                            tools:layout_editor_absoluteX="84dp"
-                            tools:layout_editor_absoluteY="31dp" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-
-                        <TextView
-                            android:id="@+id/txtPort"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/server_port"
-                            android:textColor="@android:color/black"
-                            tools:layout_editor_absoluteX="8dp"
-                            tools:layout_editor_absoluteY="87dp" />
-
-                        <EditText
-                            android:id="@+id/portEditText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:ems="10"
-                            android:fontFamily="monospace"
-                            android:hint="@string/_10080"
-                            android:inputType="textPersonName"
-                            android:textSize="12sp"
-                            android:typeface="monospace"
-                            tools:ignore="Autofill"
-                            tools:layout_editor_absoluteX="90dp"
-                            tools:layout_editor_absoluteY="72dp" />
-                    </TableRow>
-
-                </TableLayout>
-
-                <Button
-                    android:id="@+id/sendButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:elevation="0dp"
-                    android:text="@string/verify"
-                    tools:text="Verify" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -258,6 +259,9 @@
                         android:text="@string/togglebutton"
                         android:textOff="@string/play"
                         android:textOn="@string/pause"
+                        android:elevation="1dp"
+                        android:layout_margin="3dp"
+                        android:translationZ="1dp"
                         tools:ignore="NestedWeights" />
 
                     <ToggleButton
@@ -269,6 +273,9 @@
                         android:text="@string/togglebutton"
                         android:textOff="@string/loop"
                         android:textOn="@string/loop"
+                        android:elevation="1dp"
+                        android:layout_margin="3dp"
+                        android:translationZ="1dp"
                         tools:ignore="NestedWeights" />
 
                     <CheckBox
@@ -299,6 +306,10 @@
                         android:layout_weight="1"
                         android:background="@android:color/holo_red_light"
                         android:text="@string/stop"
+                        android:elevation="1dp"
+
+                        android:layout_margin="3dp"
+                        android:translationZ="1dp"
                         tools:ignore="NestedWeights" />
 
 
@@ -314,7 +325,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ems="10"
-                            android:hint="@string/default_start_bar"
+                            android:hint="@string/default_measure_start"
                             android:inputType="number"
                             android:textAlignment="center"
                             android:importantForAutofill="no" />
@@ -334,7 +345,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ems="10"
-                            android:hint="@string/default_end_bar"
+                            android:hint="@string/default_end_start"
                             android:inputType="number"
                             android:textAlignment="center"
                             android:importantForAutofill="no" />

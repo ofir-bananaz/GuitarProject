@@ -1,10 +1,11 @@
 import guitarpro as gp
 
-NUM_FRETS = 7  # The First fret (controller's LEDs) is save for string indication
+NUM_FRETS = 6  # The First fret (controller's LEDs) is save for string indication
 BEND_EFFECT_EVENT_TIME = 4
 HAMMER_EFFECT_EVENT_TIME = 4
 SLIDE_EFFECT_EVENT_TIME = 8
 EFFECT_VID_REPEATS = 3
+OPEN_FRET_INDICATION_COLOR = "green"
 
 
 class GuitarProControllerParser:
@@ -25,7 +26,6 @@ class GuitarProControllerParser:
         :return:  the list
         """
         return list(map(lambda x: str(x.name) if len(x.strings) <= 6 and not x.isPercussionTrack else 'invalid track', self.gp.tracks))
-
 
     def get_measure_start_event_indices(self):
         return self.get_measure_start_event_indices()
@@ -137,8 +137,14 @@ class GuitarProControllerParser:
 
     def add_dot(self, fret, guitar_string, color):
         indication_color = "red" if fret > NUM_FRETS else "purple"
-        self.events.append({"event_type": "dot", "fret": fret, "guitar_string": guitar_string, "color": color})
+        if fret == 0:
+            indication_color = OPEN_FRET_INDICATION_COLOR
+            fret_idx = fret
+        else:
+            fret_idx = fret - 1  # first fret used as string indication, "play open string"(fret 0) or "play first fret"
+        self.events.append({"event_type": "dot", "fret": fret_idx, "guitar_string": guitar_string, "color": color})
         self.events.append({"event_type": "dot", "fret": 0, "guitar_string": guitar_string, "color": indication_color})  # this is an event to indicate witch string to play
+
 
     def add_notes_events(self, beat):
         """

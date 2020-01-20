@@ -24,8 +24,8 @@
     <string name="default_tempo">127</string>
     <string name="loop">LOOP</string>
     <string name="to">to bar</string>
-    <string name="default_start_bar">0</string>
-    <string name="default_end_bar">0</string>
+    <string name="default_measure_start">0</string>
+    <string name="default_end_start">0</string>
     <string-array name="tab_files">
         <item>simple_ours.txt</item>
         <item>another_file.txt</item>

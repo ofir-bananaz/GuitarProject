@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 	private EditText ipEditText;
 	private EditText portEditText;
 	private EditText tempoEditText;
-	private EditText loopStartBarEditText;
-	private EditText loopEndBarEditText;
+	private EditText loopStartMeasureEditText;
+	private EditText loopEndMeasureEditText;
 	private TextView debugView;
 	private Spinner spinner;
 	private Spinner guitarProTracksSpinner;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 	private String controllerPort;
 	private int controllerTime;
     private List<SongTrack> lastSelectedSongTracksList = new ArrayList<>();
-	private Integer currSongEndBar;
+	private Integer currSongEndMeasure;
 
 	private void requestPermissions() {
         if(ContextCompat.checkSelfPermission(this,
@@ -120,8 +120,8 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 		ipEditText = findViewById(R.id.ipEditText);
 		portEditText = findViewById(R.id.portEditText);
 		tempoEditText = findViewById(R.id.tempoEditText);
-		loopStartBarEditText = findViewById(R.id.loopStart);
-		loopEndBarEditText = findViewById(R.id.loopEnd);
+		loopStartMeasureEditText = findViewById(R.id.loopStart);
+		loopEndMeasureEditText = findViewById(R.id.loopEnd);
 		debugView = findViewById(R.id.debugView);
 		debugView.setMaxLines(Integer.MAX_VALUE);
 		spinner = findViewById(R.id.spinner);
@@ -371,18 +371,18 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 		loopButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
 				updateVariablesFromTextBoxes();
-				Integer startBar = Integer.parseInt(loopStartBarEditText.getText().toString());
-				Integer endBar = Integer.parseInt(loopEndBarEditText.getText().toString());
-				if (startBar >= currSongEndBar || endBar > currSongEndBar) {
+				Integer startMeasure = Integer.parseInt(loopStartMeasureEditText.getText().toString());
+				Integer endMeasure = Integer.parseInt(loopEndMeasureEditText.getText().toString());
+				if (startMeasure >= currSongEndMeasure || endMeasure > currSongEndMeasure) {
 					Toast.makeText(getApplicationContext(), "Choose Start/End values between song limits (Use value in the hints range)", Toast.LENGTH_LONG).show();
 					return;
 				}
-				if (startBar >= endBar) {
-					String msg = "Illegal values for bar loop! Set values between 0 to " + currSongEndBar + ". Make sure that start < end.";
+				if (startMeasure >= endMeasure) {
+					String msg = "Illegal values for Measures loop! Set values between 0 to " + currSongEndMeasure + ". Make sure that start < end.";
 					Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
 					return;
 				}
-				(new SendInstruction()).execute("UDP", controllerIP, controllerPort, prepareLoopInstruction(lastSelectedSong.getEventIndexForMeasure(startBar), lastSelectedSong.getEventIndexForMeasure(endBar))); // TODO - check with Ohad what is the right command to send
+				(new SendInstruction()).execute("UDP", controllerIP, controllerPort, prepareLoopInstruction(lastSelectedSong.getEventIndexForMeasure(startMeasure), lastSelectedSong.getEventIndexForMeasure(endMeasure))); // TODO - check with Ohad what is the right command to send
 				DebugLog.d(TAG, "Loop instruction sent.");
 
 			}
@@ -464,16 +464,16 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 
 	private void enableLoopButton(Integer endHint) {
 		if (lastSelectedSong.isGuitarProSong()) {
-			currSongEndBar = endHint;
+			currSongEndMeasure = endHint;
 			loopButton.setEnabled(true);
-			loopEndBarEditText.setHint(endHint.toString());
+			loopEndMeasureEditText.setHint(endHint.toString());
 		}
 	}
 
 	private void resetLoopButton() {
 		loopButton.setEnabled(false);
-		loopStartBarEditText.setHint(R.string.default_start_bar);
-		loopEndBarEditText.setHint(R.string.default_end_bar);
+		loopStartMeasureEditText.setHint(R.string.default_measure_start);
+		loopEndMeasureEditText.setHint(R.string.default_end_start);
 	}
 
 
