@@ -24,8 +24,6 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.File;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -243,83 +241,6 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 						spinner.setEnabled(false);
 						verifyButton.setEnabled(false);
 						enableLoopButton(parsedSong.getMeasuresStartlist().size() - 1); // TODO - enable with the parameters from the Guitar pro loop
-						//This is a hacky workaround for a new incoming message event (needs to be replaced with a listener)
-						new Thread(new Runnable(){
-							public void run(){
-								// a potentially  time consuming task
-								//Wait for song to finish (i.e., wait for controller to be in IDLE state)
-								DatagramSocket clientSocketRecv = null;
-								DatagramPacket receivePacket = null;
-								byte[] receiveData = new byte[1024];
-								int TIMEOUT = 60 * 1000;
-								int idle_port = 5085;
-								String serverResponse = "";
-								long startTime = System.currentTimeMillis();
-								try{
-									clientSocketRecv = new DatagramSocket(idle_port);
-									receivePacket = new DatagramPacket(receiveData, receiveData.length);
-									clientSocketRecv.setSoTimeout(TIMEOUT);
-
-								}catch(Exception e){
-									//									DebugLog.d(TAG, Log.getStackTraceString(e));
-									int fix_tries = 1;
-
-									while(fix_tries > 0){
-										try{
-											if (clientSocketRecv != null) {
-												clientSocketRecv.close();
-											}
-											clientSocketRecv = new DatagramSocket(idle_port);
-											receivePacket = new DatagramPacket(receiveData, receiveData.length);
-											clientSocketRecv.setSoTimeout(TIMEOUT);
-										}catch(Exception e1){
-											Log.e(TAG, "Couldn't listen on port " + idle_port);
-										}
-									}
-
-
-								}
-								try{
-									clientSocketRecv.receive(receivePacket);
-									serverResponse = new String(receivePacket.getData(), 0, receivePacket.getLength());//Added packet length, else answerFromServer will contain garbage
-
-								}catch(Exception e){
-									//					DebugLog.d(TAG, "No answer from server after "+ TIMEOUT +" seconds, closing.");
-									serverResponse = "RESPONSE_TIME_TIMEOUT";
-
-								}
-								clientSocketRecv.close();
-
-								//For testing (Song ends after TIMEOUT):
-								serverResponse = "IDLE";
-								long difference = System.currentTimeMillis() - startTime;
-
-								stopButton.post(new Runnable(){
-									public void run(){
-										stopButton.setEnabled(false);
-									}
-								});
-								verifyButton.post(new Runnable(){
-									public void run(){
-										verifyButton.setEnabled(true);
-									}
-								});
-								spinner.post(new Runnable(){
-									public void run(){
-										spinner.setEnabled(true);
-									}
-								});
-								playPauseButton.post(new Runnable(){
-									public void run(){
-										playPauseButton.setChecked(false);
-									}
-								});
-								lastSentSong = lastSelectedSong;
-								lastSentSong.setInGuitar(false);
-
-
-							}
-						}).start();
 
 					}else{
 						ControllerInstruction.create().execute("UDP", controllerIP, controllerPort, "PLAY");
@@ -481,13 +402,10 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 	}
 
 	public void updateState(final String state){
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				textViewState.setText(state);
-				if (state.equals("Connection active, waiting for a song...")) {
-					updateVariablesFromTextBoxes();
-				}
+		runOnUiThread(() -> {
+			textViewState.setText(state);
+			if (state.equals("Connection active, waiting for a song...")) {
+				updateVariablesFromTextBoxes();
 			}
 		});
 	}
