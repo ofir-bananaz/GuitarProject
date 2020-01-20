@@ -3,7 +3,6 @@ package com.example.dannyboy.smartguitarapp;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 	Song lastSelectedSong = null;
 	Song lastSentSong = null;
 	ArrayList<Song> songArrayList = new ArrayList<>();
-	private Button sendButton, stopButton, loopButton;
+	private Button verifyButton, stopButton, loopButton;
 	private ToggleButton playPauseButton;
 	private CheckBox interactive_modeCheckBox;
 	private EditText ipEditText;
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		interactive_modeCheckBox = findViewById(R.id.checkBox);
-		sendButton = findViewById(R.id.sendButton);
+		verifyButton = findViewById(R.id.sendButton);
 		playPauseButton = findViewById(R.id.playPauseButton);
 		stopButton = findViewById(R.id.stopButton);
 		loopButton = findViewById(R.id.loopButton);
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 		promptDialog = new PromptDialog(MainActivity.this);
 		initiateSongsList();
 		initiateTracksList();
-		sendButton.setEnabled(false);
+		verifyButton.setEnabled(true);
 		playPauseButton.setEnabled(false);
 		stopButton.setEnabled(false);
 		resetLoopButton();
@@ -157,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 					lastSelectedSong = (Song) parentView.getSelectedItem();//Should check somehow if song is already in the device.
 					if(!lastSelectedSong.getName().contains("<Select Song>")){
 						DebugLog.d(TAG, "User selected: " + lastSelectedSong.getName());
-						sendButton.setEnabled(true);
+						verifyButton.setEnabled(false);
 						playPauseButton.setEnabled(true);
 						if(lastSelectedSong.getName().contains("Download new song from URL")){
 							DownloadFileAsyncTask downloadFileAsyncTask;
@@ -207,31 +206,10 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 		});
 
 
-		sendButton.setOnClickListener(new View.OnClickListener(){
+		verifyButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
-				String serverAnswer;
 				updateVariablesFromTextBoxes();
-
-				MediaPlayer error = MediaPlayer.create(MainActivity.this, R.raw.error);
-				MediaPlayer success = MediaPlayer.create(MainActivity.this, R.raw.success);
-
-				try{
-					ParsedSong parsedSong = lastSelectedSong.prepareSongForController(interactive_modeCheckBox.isChecked(), controllerTime, selectedTrack.getIndex());
-					serverAnswer = controllerSongLoader.load(parsedSong.getParsedString(), controllerIP, controllerPort);
-				}catch(Exception e){
-					error.start();
-					return;
-				}
-
-				if(serverAnswer.contains("Error: Both strings are NOT equal!")){
-					DebugLog.d(TAG, "Failure: Both strings are NOT equal!");
-					error.start();
-				}else if(serverAnswer.contains("RESPONSE_TIME_TIMEOUT")){
-					DebugLog.d(TAG, "Failure: Server response timeout");
-				}else{
-					DebugLog.d(TAG, "Success: both strings are identical!");
-					success.start();
-				}
+				ControllerInstruction.create().execute("UDP", controllerIP, controllerPort, "STOP");
 			}
 		});
 
@@ -260,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 						DebugLog.d(TAG, "Song data sent.");
 						stopButton.setEnabled(true);
 						spinner.setEnabled(false);
-						sendButton.setEnabled(false);
+						verifyButton.setEnabled(false);
 						enableLoopButton(parsedSong.getMeasuresStartlist().size() - 1); // TODO - enable with the parameters from the Guitar pro loop
 						//This is a hacky workaround for a new incoming message event (needs to be replaced with a listener)
 						new Thread(new Runnable(){
@@ -318,9 +296,9 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 										stopButton.setEnabled(false);
 									}
 								});
-								sendButton.post(new Runnable(){
+								verifyButton.post(new Runnable(){
 									public void run(){
-										sendButton.setEnabled(true);
+										verifyButton.setEnabled(true);
 									}
 								});
 								spinner.post(new Runnable(){
@@ -341,15 +319,15 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 						}).start();
 
 					}else{
-						(new SendInstruction()).execute("UDP", controllerIP, controllerPort, "PLAY");
+						ControllerInstruction.create().execute("UDP", controllerIP, controllerPort, "PLAY");
 						DebugLog.d(TAG, "Play instruction sent.");
 						stopButton.setEnabled(true);
 						spinner.setEnabled(false);
-						sendButton.setEnabled(false);
+						verifyButton.setEnabled(false);
 					}
 
 				}else{
-					(new SendInstruction()).execute("UDP", controllerIP, controllerPort, "PAUSE");
+					ControllerInstruction.create().execute("UDP", controllerIP, controllerPort, "PAUSE");
 					DebugLog.d(TAG, "Pause instruction sent.");
 				}
 
@@ -361,11 +339,11 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 			updateVariablesFromTextBoxes();
 			lastSentSong = lastSelectedSong;
 			lastSentSong.setInGuitar(false);
-			(new SendInstruction()).execute("UDP", controllerIP, controllerPort, "~0/0/0"); //disable loop instruction
-			(new SendInstruction()).execute("UDP", controllerIP, controllerPort, "STOP");
+			ControllerInstruction.create().execute("UDP", controllerIP, controllerPort, "~0/0/0"); //disable loop instruction
+			ControllerInstruction.create().execute("UDP", controllerIP, controllerPort, "STOP");
 			DebugLog.d(TAG, "Stop instruction sent.");
 			stopButton.setEnabled(false);
-			sendButton.setEnabled(true);
+			verifyButton.setEnabled(true);
 			resetLoopButton();
 			spinner.setEnabled(true);
 			playPauseButton.setChecked(false);
@@ -387,7 +365,7 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 					Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
 					return;
 				}
-				(new SendInstruction()).execute("UDP", controllerIP, controllerPort, prepareLoopInstruction(lastSelectedSong.getEventIndexForMeasure(startMeasure), lastSelectedSong.getEventIndexForMeasure(endMeasure))); // TODO - check with Ohad what is the right command to send
+				ControllerInstruction.create().execute("UDP", controllerIP, controllerPort, prepareLoopInstruction(lastSelectedSong.getEventIndexForMeasure(startMeasure), lastSelectedSong.getEventIndexForMeasure(endMeasure))); // TODO - check with Ohad what is the right command to send
 				DebugLog.d(TAG, "Loop instruction sent.");
 
 			}
@@ -395,19 +373,19 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 	}
 
 	@Override
-	protected void onStart() {
+	protected void onResume() {
 		udpServerThread = new UdpServerThread(UdpServerPORT, this);
 		udpServerThread.start();
-		super.onStart();
+		super.onResume();
 	}
 
 	@Override
-	protected void onStop() {
+	protected void onPause() {
 		if(udpServerThread != null){
 			udpServerThread.setRunningToFalse();
 			udpServerThread = null;
 		}
-		super.onStop();
+		super.onPause();
 	}
 
 

@@ -2,9 +2,6 @@ package com.example.dannyboy.smartguitarapp;
 
 import android.util.Log;
 
-import com.google.common.util.concurrent.SimpleTimeLimiter;
-import com.google.common.util.concurrent.TimeLimiter;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -12,8 +9,6 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 import static android.content.ContentValues.TAG;
-import static java.util.concurrent.Executors.newCachedThreadPool;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 class UdpServerThread extends Thread{
 
@@ -29,15 +24,18 @@ class UdpServerThread extends Thread{
     }
 
     void setRunningToFalse(){
-        this.running = false;
+        running = false;
     }
 
     @Override
     public void run() {
 
-        running = true;
+        this.running = true;
         try {
             mainActivity.updateState("Starting UDP Server");
+            if(socket != null) {
+                socket.close();
+            }
             socket = new DatagramSocket(serverPort);
             socket.setSoTimeout(10000);
 
@@ -53,12 +51,12 @@ class UdpServerThread extends Thread{
                     mainActivity.updateState(new String(packet.getData(), 0, packet.getLength()));
                 }
                 catch (SocketTimeoutException e) {
-                    mainActivity.updateState("Controller connection is not alive...");
+                    mainActivity.updateState("Lost connection with the Guitar-Controller.");
                 }
             }
 
             Log.e(TAG, "UDP Server ended");
-            mainActivity.updateState("UDP Server ended...");
+            mainActivity.updateState("Connection to the Guitar-Controller stopped...");
 
         } catch (SocketException e) {
             e.printStackTrace();

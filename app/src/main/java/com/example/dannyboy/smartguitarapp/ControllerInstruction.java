@@ -7,9 +7,14 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 
-public class SendInstruction extends AsyncTask<String, Void, String>{
+public class ControllerInstruction extends AsyncTask<String, Void, String>{
 
 	private String TAG = "myFilter";
+
+
+	static ControllerInstruction create() {
+		return new ControllerInstruction();
+	}
 
 	@Override
 	protected String doInBackground(String... params){
