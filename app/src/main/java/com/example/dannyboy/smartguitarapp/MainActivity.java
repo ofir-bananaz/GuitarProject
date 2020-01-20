@@ -164,7 +164,10 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 							downloadFileAsyncTask.setOnDoneListener(MainActivity.this);
 							promptDialog.promptUser(downloadFileAsyncTask);
 						}
+					} else {
+						playPauseButton.setEnabled(false);
 					}
+
 
 				}catch(Exception e){
 					Log.d(TAG, "Spinner initiation failed!");
@@ -482,7 +485,15 @@ public class MainActivity extends AppCompatActivity implements OnDoneListener {
 			@Override
 			public void run() {
 				textViewState.setText(state);
+				if (state.equals("Connection active, waiting for a song...")) {
+					updateVariablesFromTextBoxes();
+				}
 			}
 		});
 	}
+
+	public void initiateVerifyButton() {
+		verifyButton.setEnabled(true);
+	}
+
 }

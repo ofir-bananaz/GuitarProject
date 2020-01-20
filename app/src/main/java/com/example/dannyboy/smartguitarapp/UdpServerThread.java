@@ -39,7 +39,7 @@ class UdpServerThread extends Thread{
             socket = new DatagramSocket(serverPort);
             socket.setSoTimeout(10000);
 
-            mainActivity.updateState("Waiting for controller's response...");
+            mainActivity.updateState("Press verify to start connection with the controller...");
             Log.e(TAG, "UDP Server is running");
 
             while(running){
@@ -51,12 +51,13 @@ class UdpServerThread extends Thread{
                     mainActivity.updateState(new String(packet.getData(), 0, packet.getLength()));
                 }
                 catch (SocketTimeoutException e) {
-                    mainActivity.updateState("Lost connection with the Guitar-Controller.");
+                    mainActivity.updateState("Waiting to for Guitar-Controller connection...\nPress verify to test the connection");
+                    mainActivity.initiateVerifyButton();
                 }
             }
 
             Log.e(TAG, "UDP Server ended");
-            mainActivity.updateState("Connection to the Guitar-Controller stopped...");
+            mainActivity.updateState("Connection to the Guitar-Controller ended...");
 
         } catch (SocketException e) {
             e.printStackTrace();
